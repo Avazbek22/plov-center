@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using PlovCenter.Application.Abstractions.Auth;
+using PlovCenter.Application.Common.Interfaces.Services;
 using PlovCenter.Domain.Entities;
 
 namespace PlovCenter.Infrastructure.Authentication;

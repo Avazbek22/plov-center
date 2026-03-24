@@ -1,7 +1,7 @@
 # Plov Center Backend
 
-Production-ready ASP.NET Core Web API backend for the Plov Center cafe website and admin panel.  
-Scope: public showcase pages, public menu, admin authentication, CMS-style content management, category/dish CRUD, and image uploads.
+ASP.NET Core Web API backend for the Plov Center cafe website and admin panel.  
+Scope stays intentionally narrow: public showcase pages, public menu, admin authentication, CMS-style content management, category/dish CRUD, and image uploads.
 
 ## Stack
 
@@ -9,23 +9,36 @@ Scope: public showcase pages, public menu, admin authentication, CMS-style conte
 - ASP.NET Core Web API with controllers
 - PostgreSQL
 - Entity Framework Core (Code First)
+- MediatR
+- FluentValidation
 - JWT Bearer authentication
-- Clean Architecture
-- CQRS with feature-based request handlers
 - Swagger / OpenAPI
 
-## Solution Structure
+## Architecture
 
-- `src/Domain`  
-  Domain entities and core model behavior.
-- `src/Application`  
-  Use cases, validation, CQRS dispatcher, abstractions, and business rules.
-- `src/Application.Contract`  
-  External request/response DTOs and API-facing contracts.
-- `src/Infrastructure`  
-  EF Core, repositories, JWT implementation, password hashing, file storage, seeding, and migrations.
-- `src/WebApi`  
-  Controllers, middleware, auth/cors/swagger configuration, static files, and startup pipeline.
+The solution is organized in a Clean Architecture style and was refactored toward a SunnyEast-like structure:
+
+- `src/Domain`
+  Simple POCO entities and base types only.
+- `src/Application.Contract`
+  Feature-based request contracts and response models split into `Commands`, `Queries`, and `Responses`.
+- `src/Application`
+  MediatR handlers, validators, common exceptions, pipeline behavior, mappings, and application interfaces.
+- `src/Infrastructure`
+  `ApplicationDbContext`, EF Core configuration, JWT, password hashing, current user service, time service, file storage, migrations, and seeding.
+- `src/WebApi`
+  Thin controllers, middleware, auth/cors/swagger configuration, static files, and startup composition.
+- `scripts`
+  Local helper scripts, including the smoke-check used for verification.
+
+Key architectural choices:
+
+- MediatR replaces the old custom dispatcher.
+- Controllers send request contracts from `Application.Contract`.
+- Handlers live in `Application/Features/<Feature>/{Commands|Queries}`.
+- `IApplicationDbContext` is the main persistence abstraction instead of repository-per-entity.
+- Domain entities are plain property-based models without mutation methods.
+- FluentValidation is wired through a MediatR pipeline behavior.
 
 ## Implemented Features
 
@@ -48,7 +61,7 @@ Scope: public showcase pages, public menu, admin authentication, CMS-style conte
 - Public menu endpoint
   - visible categories only
   - visible dishes only
-  - sorted output
+  - stable sorting
 - Image uploads
   - dish and about-page images
   - `jpg`, `jpeg`, `png` only
@@ -121,7 +134,7 @@ dotnet build PlovCenter.sln
 dotnet dotnet-ef database update --project src/Infrastructure/PlovCenter.Infrastructure.csproj --startup-project src/WebApi/PlovCenter.WebApi.csproj
 ```
 
-If you need to create a new migration later:
+If you need a new migration later:
 
 ```bash
 dotnet dotnet-ef migrations add <MigrationName> --project src/Infrastructure/PlovCenter.Infrastructure.csproj --startup-project src/WebApi/PlovCenter.WebApi.csproj --output-dir Persistence/Migrations
@@ -138,6 +151,12 @@ Useful URLs:
 - Swagger UI: `http://localhost:5288/swagger`
 - Public menu: `http://localhost:5288/api/public/menu`
 - Public content: `http://localhost:5288/api/public/content`
+
+Optional smoke-check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\smoke-test.ps1
+```
 
 ## Seeded Admin
 
@@ -232,17 +251,21 @@ The repository was verified in this environment with:
 
 - `dotnet restore`
 - `dotnet build PlovCenter.sln`
-- `dotnet ef migrations add InitialCreate`
+- `dotnet dotnet-ef migrations list`
 - `dotnet dotnet-ef database update`
 - `dotnet run --project src/WebApi/PlovCenter.WebApi.csproj --launch-profile http`
+- `powershell -ExecutionPolicy Bypass -File .\scripts\smoke-test.ps1`
 - Swagger availability check
+- `401` on invalid login
+- `401` on anonymous access to a protected admin endpoint
 - Admin login and `me` endpoint
+- Admin content get/update
 - Category and dish creation
-- Conflict on category deletion when dishes exist
+- `409` on category deletion when dishes exist
 - Image upload and static file serving
 - Public menu and content responses
 
 ## Notes
 
 - The project intentionally does not include orders, carts, delivery, payments, customer accounts, tests, CI/CD, or unrelated future modules.
-- The backend is ready for future extension without changing the architectural base.
+- The backend keeps the current business scope and API style while cleaning up the architecture.

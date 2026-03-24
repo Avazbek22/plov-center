@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using PlovCenter.Application.Common.Cqrs;
-using PlovCenter.Application.Contract.Menu;
-using PlovCenter.Application.Features.Menu;
+using MediatR;
+using PlovCenter.Application.Contract.Menu.Queries;
+using PlovCenter.Application.Contract.Menu.Responses;
 
 namespace PlovCenter.WebApi.Controllers.Public;
 
 [ApiController]
 [Route("api/public/menu")]
-public sealed class PublicMenuController(IRequestSender requestSender) : ControllerBase
+public sealed class PublicMenuController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     public Task<PublicMenuResponse> GetMenuAsync(CancellationToken cancellationToken)
     {
-        return requestSender.SendAsync(new GetPublicMenuQuery(), cancellationToken);
+        return mediator.Send(new GetPublicMenuQuery(), cancellationToken);
     }
 }
