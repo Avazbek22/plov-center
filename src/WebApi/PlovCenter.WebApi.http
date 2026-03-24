@@ -1,0 +1,21 @@
+@PlovCenter.WebApi_HostAddress = http://localhost:5288
+
+GET {{PlovCenter.WebApi_HostAddress}}/api/public/menu
+Accept: application/json
+
+###
+
+GET {{PlovCenter.WebApi_HostAddress}}/api/public/content
+Accept: application/json
+
+###
+
+POST {{PlovCenter.WebApi_HostAddress}}/api/admin/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin123!"
+}
+
+###
