@@ -16,7 +16,6 @@ public sealed class SetCategoryVisibilityCommandHandler(
     public async Task<CategoryResponse> Handle(SetCategoryVisibilityCommand request, CancellationToken cancellationToken)
     {
         var category = await applicationDbContext.Categories
-            .Include(static item => item.Dishes)
             .FirstOrDefaultAsync(item => item.Id == request.CategoryId, cancellationToken)
             ?? throw new NotFoundException("Category was not found.");
 
@@ -25,6 +24,9 @@ public sealed class SetCategoryVisibilityCommandHandler(
 
         await applicationDbContext.SaveChangesAsync(cancellationToken);
 
-        return category.ToCategoryResponse();
+        var dishCount = await applicationDbContext.Dishes
+            .CountAsync(item => item.CategoryId == category.Id, cancellationToken);
+
+        return category.ToCategoryResponse(dishCount);
     }
 }

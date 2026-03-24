@@ -12,11 +12,13 @@ public sealed class DeleteCategoryCommandHandler(IApplicationDbContext applicati
     public async Task<Unit> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = await applicationDbContext.Categories
-            .Include(static item => item.Dishes)
             .FirstOrDefaultAsync(item => item.Id == request.CategoryId, cancellationToken)
             ?? throw new NotFoundException("Category was not found.");
 
-        if (category.Dishes.Count > 0)
+        var hasDishes = await applicationDbContext.Dishes
+            .AnyAsync(item => item.CategoryId == category.Id, cancellationToken);
+
+        if (hasDishes)
         {
             throw new ConflictException("A category with dishes cannot be deleted.");
         }

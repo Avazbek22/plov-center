@@ -5,15 +5,20 @@ namespace PlovCenter.Application.Features.Categories.Mappings;
 
 internal static class CategoryResponseMappings
 {
-    public static CategoryResponse ToCategoryResponse(this Category category)
+    public static CategoryResponse ToCategoryResponse(this Category category, int dishCount)
     {
         return new CategoryResponse(
             category.Id,
             category.Name,
             category.SortOrder,
             category.IsVisible,
-            category.Dishes.Count,
+            dishCount,
             category.CreatedUtc,
             category.UpdatedUtc);
+    }
+
+    public static CategoryResponse ToCategoryResponse(this Category category)
+    {
+        return category.ToCategoryResponse(category.Dishes.Count);
     }
 }

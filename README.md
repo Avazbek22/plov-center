@@ -65,6 +65,7 @@ Key architectural choices:
 - Image uploads
   - dish and about-page images
   - `jpg`, `jpeg`, `png` only
+  - extension and file signature validation
   - max file size `5 MB`
   - files stored on local disk under `src/WebApi/wwwroot/uploads`
 - Global error handling with consistent JSON responses

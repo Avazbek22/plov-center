@@ -11,12 +11,14 @@ using PlovCenter.Infrastructure.Configuration;
 
 namespace PlovCenter.Infrastructure.Authentication;
 
-internal sealed class JwtTokenService(IOptions<JwtOptions> jwtOptions) : IJwtTokenService
+internal sealed class JwtTokenService(
+    IOptions<JwtOptions> jwtOptions,
+    IDateTimeService dateTimeService) : IJwtTokenService
 {
     public JwtTokenResult Create(AdminUser adminUser)
     {
         var options = jwtOptions.Value;
-        var expiresAtUtc = DateTime.UtcNow.AddMinutes(options.ExpiresMinutes);
+        var expiresAtUtc = dateTimeService.UtcNow.AddMinutes(options.ExpiresMinutes);
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SigningKey));
 
         Claim[] claims =

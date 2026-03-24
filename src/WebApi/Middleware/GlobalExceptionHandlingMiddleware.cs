@@ -1,3 +1,4 @@
+using System.Text.Json;
 using PlovCenter.Application.Common.Exceptions;
 using PlovCenter.WebApi.Common;
 
@@ -21,6 +22,30 @@ public sealed class GlobalExceptionHandlingMiddleware(
                 exception.ErrorCode,
                 exception.Message,
                 exception is RequestValidationException validationException ? validationException.Errors : null);
+        }
+        catch (BadHttpRequestException)
+        {
+            await ApiErrorResponseWriter.WriteAsync(
+                context,
+                StatusCodes.Status400BadRequest,
+                "validation_error",
+                "The request payload is invalid.");
+        }
+        catch (InvalidDataException)
+        {
+            await ApiErrorResponseWriter.WriteAsync(
+                context,
+                StatusCodes.Status400BadRequest,
+                "validation_error",
+                "The request payload is invalid.");
+        }
+        catch (JsonException)
+        {
+            await ApiErrorResponseWriter.WriteAsync(
+                context,
+                StatusCodes.Status400BadRequest,
+                "validation_error",
+                "The request payload is invalid.");
         }
         catch (Exception exception)
         {

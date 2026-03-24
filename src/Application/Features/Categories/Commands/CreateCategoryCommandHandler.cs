@@ -30,6 +30,6 @@ public sealed class CreateCategoryCommandHandler(
         applicationDbContext.Categories.Add(category);
         await applicationDbContext.SaveChangesAsync(cancellationToken);
 
-        return category.ToCategoryResponse();
+        return category.ToCategoryResponse(0);
     }
 }

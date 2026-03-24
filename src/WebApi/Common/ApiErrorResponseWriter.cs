@@ -22,7 +22,16 @@ internal static class ApiErrorResponseWriter
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json";
 
-        var payload = new ApiErrorResponse(code, message, context.TraceIdentifier, errors);
+        var payload = CreatePayload(context, code, message, errors);
         await context.Response.WriteAsync(JsonSerializer.Serialize(payload, SerializerOptions));
+    }
+
+    public static ApiErrorResponse CreatePayload(
+        HttpContext context,
+        string code,
+        string message,
+        IReadOnlyDictionary<string, string[]>? errors = null)
+    {
+        return new ApiErrorResponse(code, message, context.TraceIdentifier, errors);
     }
 }
