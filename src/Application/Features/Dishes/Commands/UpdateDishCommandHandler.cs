@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PlovCenter.Application.Common.Extensions;
 using PlovCenter.Application.Common.Exceptions;
 using PlovCenter.Application.Common.Interfaces.Contexts;
 using PlovCenter.Application.Common.Interfaces.Services;
@@ -26,10 +27,10 @@ public sealed class UpdateDishCommandHandler(
             ?? throw new NotFoundException("Category was not found.");
 
         dish.CategoryId = request.CategoryId;
-        dish.Name = request.Name.Trim();
-        dish.Description = NormalizeOptionalText(request.Description);
+        dish.Name = request.Name.NormalizeTrimmed();
+        dish.Description = request.Description.NormalizeOptional();
         dish.Price = request.Price;
-        dish.PhotoPath = NormalizeOptionalText(request.PhotoPath);
+        dish.PhotoPath = request.PhotoPath.NormalizeOptional();
         dish.SortOrder = request.SortOrder;
         dish.IsVisible = request.IsVisible;
         dish.UpdatedUtc = dateTimeService.UtcNow;
@@ -37,10 +38,5 @@ public sealed class UpdateDishCommandHandler(
         await applicationDbContext.SaveChangesAsync(cancellationToken);
 
         return dish.ToDishResponse(category.Name);
-    }
-
-    private static string? NormalizeOptionalText(string? value)
-    {
-        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 }

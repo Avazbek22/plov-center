@@ -105,7 +105,7 @@ dotnet tool restore
 
 ### 2. PostgreSQL
 
-Default local configuration is already set in [`src/WebApi/appsettings.json`](/C:/Users/avazb/RiderProjects/plov-center/src/WebApi/appsettings.json):
+Default local configuration is already set in `src/WebApi/appsettings.json`:
 
 ```json
 "ConnectionStrings": {
@@ -223,7 +223,7 @@ Multipart form fields:
 
 ## Files and Uploads
 
-- Physical storage path: [`src/WebApi/wwwroot/uploads`](/C:/Users/avazb/RiderProjects/plov-center/src/WebApi/wwwroot/uploads)
+- Physical storage path: `src/WebApi/wwwroot/uploads`
 - Public file URL format: `/uploads/{relative-path}`
 - Uploaded file names are randomized
 - Only relative file paths are stored in the database

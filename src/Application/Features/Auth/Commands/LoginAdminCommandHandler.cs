@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PlovCenter.Application.Common.Extensions;
 using PlovCenter.Application.Common.Exceptions;
 using PlovCenter.Application.Common.Interfaces.Contexts;
 using PlovCenter.Application.Common.Interfaces.Services;
@@ -15,7 +16,7 @@ public sealed class LoginAdminCommandHandler(
 {
     public async Task<LoginResponse> Handle(LoginAdminCommand request, CancellationToken cancellationToken)
     {
-        var normalizedUsername = request.Username.Trim().ToLowerInvariant();
+        var normalizedUsername = request.Username.NormalizeTrimmedLowerInvariant();
 
         var adminUser = await applicationDbContext.AdminUsers
             .FirstOrDefaultAsync(user => user.Username == normalizedUsername, cancellationToken);

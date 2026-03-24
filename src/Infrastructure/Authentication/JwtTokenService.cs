@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using PlovCenter.Application.Common.Constants;
 using PlovCenter.Application.Common.Interfaces.Services;
 using PlovCenter.Application.Common.Models;
 using PlovCenter.Domain.Entities;
@@ -23,7 +24,8 @@ internal sealed class JwtTokenService(IOptions<JwtOptions> jwtOptions) : IJwtTok
             new Claim(JwtRegisteredClaimNames.Sub, adminUser.Id.ToString()),
             new Claim(ClaimTypes.NameIdentifier, adminUser.Id.ToString()),
             new Claim(ClaimTypes.Name, adminUser.Username),
-            new Claim(JwtRegisteredClaimNames.UniqueName, adminUser.Username)
+            new Claim(JwtRegisteredClaimNames.UniqueName, adminUser.Username),
+            new Claim(AdminClaimTypes.Access, bool.TrueString.ToLowerInvariant())
         ];
 
         var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);

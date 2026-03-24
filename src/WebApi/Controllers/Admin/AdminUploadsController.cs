@@ -8,7 +8,7 @@ using PlovCenter.WebApi.Common;
 namespace PlovCenter.WebApi.Controllers.Admin;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.AdminAccess)]
 [Route("api/admin/uploads")]
 public sealed class AdminUploadsController(IMediator mediator) : ControllerBase
 {

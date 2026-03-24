@@ -4,11 +4,13 @@ using MediatR;
 using PlovCenter.Application.Contract.Categories.Commands;
 using PlovCenter.Application.Contract.Categories.Queries;
 using PlovCenter.Application.Contract.Categories.Responses;
+using PlovCenter.WebApi.Common;
+using PlovCenter.WebApi.Contracts.Admin.Categories;
 
 namespace PlovCenter.WebApi.Controllers.Admin;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.AdminAccess)]
 [Route("api/admin/categories")]
 public sealed class AdminCategoriesController(IMediator mediator) : ControllerBase
 {
@@ -37,20 +39,32 @@ public sealed class AdminCategoriesController(IMediator mediator) : ControllerBa
     [HttpPut("{categoryId:guid}")]
     public Task<CategoryResponse> UpdateCategoryAsync(
         Guid categoryId,
-        [FromBody] UpdateCategoryCommand command,
+        [FromBody] UpdateCategoryRequest request,
         CancellationToken cancellationToken)
     {
-        command.CategoryId = categoryId;
+        var command = new UpdateCategoryCommand
+        {
+            CategoryId = categoryId,
+            Name = request.Name,
+            SortOrder = request.SortOrder,
+            IsVisible = request.IsVisible
+        };
+
         return mediator.Send(command, cancellationToken);
     }
 
     [HttpPatch("{categoryId:guid}/visibility")]
     public Task<CategoryResponse> SetVisibilityAsync(
         Guid categoryId,
-        [FromBody] SetCategoryVisibilityCommand command,
+        [FromBody] SetCategoryVisibilityRequest request,
         CancellationToken cancellationToken)
     {
-        command.CategoryId = categoryId;
+        var command = new SetCategoryVisibilityCommand
+        {
+            CategoryId = categoryId,
+            IsVisible = request.IsVisible
+        };
+
         return mediator.Send(command, cancellationToken);
     }
 

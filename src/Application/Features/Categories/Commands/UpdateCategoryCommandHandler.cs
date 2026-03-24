@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PlovCenter.Application.Common.Extensions;
 using PlovCenter.Application.Common.Exceptions;
 using PlovCenter.Application.Common.Interfaces.Contexts;
 using PlovCenter.Application.Common.Interfaces.Services;
@@ -20,7 +21,7 @@ public sealed class UpdateCategoryCommandHandler(
             .FirstOrDefaultAsync(item => item.Id == request.CategoryId, cancellationToken)
             ?? throw new NotFoundException("Category was not found.");
 
-        category.Name = request.Name.Trim();
+        category.Name = request.Name.NormalizeTrimmed();
         category.SortOrder = request.SortOrder;
         category.IsVisible = request.IsVisible;
         category.UpdatedUtc = dateTimeService.UtcNow;

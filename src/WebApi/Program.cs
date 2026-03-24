@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using PlovCenter.Application;
+using PlovCenter.Application.Common.Constants;
 using PlovCenter.Infrastructure;
 using PlovCenter.Infrastructure.Configuration;
 using PlovCenter.Infrastructure.Persistence;
@@ -66,9 +67,39 @@ builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationSc
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
             ClockSkew = TimeSpan.Zero
         };
+
+        jwtBearerOptions.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+
+                await ApiErrorResponseWriter.WriteAsync(
+                    context.HttpContext,
+                    StatusCodes.Status401Unauthorized,
+                    "unauthorized",
+                    "Authentication is required.");
+            },
+            OnForbidden = async context =>
+            {
+                await ApiErrorResponseWriter.WriteAsync(
+                    context.HttpContext,
+                    StatusCodes.Status403Forbidden,
+                    "forbidden",
+                    "You do not have permission to access this resource.");
+            }
+        };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AuthorizationPolicies.AdminAccess, policyBuilder =>
+    {
+        policyBuilder
+            .RequireAuthenticatedUser()
+            .RequireClaim(AdminClaimTypes.Access, bool.TrueString.ToLowerInvariant());
+    });
+});
 
 builder.Services.AddCors(options =>
 {

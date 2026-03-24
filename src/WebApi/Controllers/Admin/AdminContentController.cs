@@ -4,11 +4,12 @@ using MediatR;
 using PlovCenter.Application.Contract.Content.Commands;
 using PlovCenter.Application.Contract.Content.Queries;
 using PlovCenter.Application.Contract.Content.Responses;
+using PlovCenter.WebApi.Common;
 
 namespace PlovCenter.WebApi.Controllers.Admin;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.AdminAccess)]
 [Route("api/admin/content")]
 public sealed class AdminContentController(IMediator mediator) : ControllerBase
 {

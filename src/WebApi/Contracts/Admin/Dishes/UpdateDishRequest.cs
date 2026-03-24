@@ -1,12 +1,7 @@
-using MediatR;
-using PlovCenter.Application.Contract.Dishes.Responses;
+namespace PlovCenter.WebApi.Contracts.Admin.Dishes;
 
-namespace PlovCenter.Application.Contract.Dishes.Commands;
-
-public sealed class UpdateDishCommand : IRequest<DishResponse>
+public sealed class UpdateDishRequest
 {
-    public Guid DishId { get; set; }
-
     public Guid CategoryId { get; set; }
 
     public string Name { get; set; } = string.Empty;

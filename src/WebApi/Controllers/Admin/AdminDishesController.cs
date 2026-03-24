@@ -4,11 +4,13 @@ using MediatR;
 using PlovCenter.Application.Contract.Dishes.Commands;
 using PlovCenter.Application.Contract.Dishes.Queries;
 using PlovCenter.Application.Contract.Dishes.Responses;
+using PlovCenter.WebApi.Common;
+using PlovCenter.WebApi.Contracts.Admin.Dishes;
 
 namespace PlovCenter.WebApi.Controllers.Admin;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.AdminAccess)]
 [Route("api/admin/dishes")]
 public sealed class AdminDishesController(IMediator mediator) : ControllerBase
 {
@@ -37,20 +39,36 @@ public sealed class AdminDishesController(IMediator mediator) : ControllerBase
     [HttpPut("{dishId:guid}")]
     public Task<DishResponse> UpdateDishAsync(
         Guid dishId,
-        [FromBody] UpdateDishCommand command,
+        [FromBody] UpdateDishRequest request,
         CancellationToken cancellationToken)
     {
-        command.DishId = dishId;
+        var command = new UpdateDishCommand
+        {
+            DishId = dishId,
+            CategoryId = request.CategoryId,
+            Name = request.Name,
+            Description = request.Description,
+            Price = request.Price,
+            PhotoPath = request.PhotoPath,
+            SortOrder = request.SortOrder,
+            IsVisible = request.IsVisible
+        };
+
         return mediator.Send(command, cancellationToken);
     }
 
     [HttpPatch("{dishId:guid}/visibility")]
     public Task<DishResponse> SetVisibilityAsync(
         Guid dishId,
-        [FromBody] SetDishVisibilityCommand command,
+        [FromBody] SetDishVisibilityRequest request,
         CancellationToken cancellationToken)
     {
-        command.DishId = dishId;
+        var command = new SetDishVisibilityCommand
+        {
+            DishId = dishId,
+            IsVisible = request.IsVisible
+        };
+
         return mediator.Send(command, cancellationToken);
     }
 

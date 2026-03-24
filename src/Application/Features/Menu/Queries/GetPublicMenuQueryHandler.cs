@@ -13,13 +13,9 @@ public sealed class GetPublicMenuQueryHandler(IApplicationDbContext applicationD
     {
         var categories = await applicationDbContext.Categories
             .AsNoTracking()
-            .Include(static category => category.Dishes)
             .Where(category => category.IsVisible)
             .OrderBy(category => category.SortOrder)
             .ThenBy(category => category.Name)
-            .ToListAsync(cancellationToken);
-
-        var payload = categories
             .Select(category => new PublicMenuCategoryResponse(
                 category.Id,
                 category.Name,
@@ -36,8 +32,8 @@ public sealed class GetPublicMenuQueryHandler(IApplicationDbContext applicationD
                         dish.PhotoPath,
                         dish.SortOrder))
                     .ToArray()))
-            .ToArray();
+            .ToArrayAsync(cancellationToken);
 
-        return new PublicMenuResponse(payload);
+        return new PublicMenuResponse(categories);
     }
 }

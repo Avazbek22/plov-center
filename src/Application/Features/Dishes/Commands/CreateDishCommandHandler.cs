@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using PlovCenter.Application.Common.Extensions;
 using PlovCenter.Application.Common.Exceptions;
 using PlovCenter.Application.Common.Interfaces.Contexts;
 using PlovCenter.Application.Common.Interfaces.Services;
@@ -27,10 +28,10 @@ public sealed class CreateDishCommandHandler(
         {
             Id = Guid.NewGuid(),
             CategoryId = request.CategoryId,
-            Name = request.Name.Trim(),
-            Description = NormalizeOptionalText(request.Description),
+            Name = request.Name.NormalizeTrimmed(),
+            Description = request.Description.NormalizeOptional(),
             Price = request.Price,
-            PhotoPath = NormalizeOptionalText(request.PhotoPath),
+            PhotoPath = request.PhotoPath.NormalizeOptional(),
             SortOrder = request.SortOrder,
             IsVisible = request.IsVisible,
             CreatedUtc = utcNow,
@@ -41,10 +42,5 @@ public sealed class CreateDishCommandHandler(
         await applicationDbContext.SaveChangesAsync(cancellationToken);
 
         return dish.ToDishResponse(category.Name);
-    }
-
-    private static string? NormalizeOptionalText(string? value)
-    {
-        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PlovCenter.Application.Common.Constants;
+using PlovCenter.Application.Common.Extensions;
 using PlovCenter.Application.Common.Interfaces.Services;
 using PlovCenter.Domain.Entities;
 using PlovCenter.Infrastructure.Configuration;
@@ -35,7 +36,7 @@ public static class DatabaseInitialization
         var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
         var passwordHashService = serviceProvider.GetRequiredService<IPasswordHashService>();
         var dateTimeService = serviceProvider.GetRequiredService<IDateTimeService>();
-        var normalizedUsername = options.Username.Trim().ToLowerInvariant();
+        var normalizedUsername = options.Username.NormalizeTrimmedLowerInvariant();
 
         var adminUser = await dbContext.AdminUsers
             .FirstOrDefaultAsync(user => user.Username == normalizedUsername, cancellationToken);

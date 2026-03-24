@@ -4,6 +4,7 @@ using MediatR;
 using PlovCenter.Application.Contract.Auth.Commands;
 using PlovCenter.Application.Contract.Auth.Queries;
 using PlovCenter.Application.Contract.Auth.Responses;
+using PlovCenter.WebApi.Common;
 
 namespace PlovCenter.WebApi.Controllers.Admin;
 
@@ -18,7 +19,7 @@ public sealed class AdminAuthController(IMediator mediator) : ControllerBase
         return mediator.Send(command, cancellationToken);
     }
 
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.AdminAccess)]
     [HttpGet("me")]
     public Task<CurrentAdminResponse> GetCurrentAdminAsync(CancellationToken cancellationToken)
     {
