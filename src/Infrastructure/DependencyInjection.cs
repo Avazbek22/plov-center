@@ -2,13 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PlovCenter.Application.Abstractions.Auth;
-using PlovCenter.Application.Abstractions.Persistence;
-using PlovCenter.Application.Abstractions.Services;
+using PlovCenter.Application.Common.Interfaces.Contexts;
+using PlovCenter.Application.Common.Interfaces.Services;
 using PlovCenter.Infrastructure.Authentication;
 using PlovCenter.Infrastructure.Configuration;
-using PlovCenter.Infrastructure.Persistence;
-using PlovCenter.Infrastructure.Persistence.Repositories;
+using PlovCenter.Infrastructure.Persistence.Contexts;
 using PlovCenter.Infrastructure.Services;
 
 namespace PlovCenter.Infrastructure;
@@ -33,21 +31,17 @@ public static class DependencyInjection
                 : Path.Combine(environment.ContentRootPath, "wwwroot", options.RootPath);
         });
 
-        services.AddDbContext<PlovCenterDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(connectionString, builder => builder.MigrationsAssembly(typeof(PlovCenterDbContext).Assembly.FullName));
+            options.UseNpgsql(connectionString, builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
         });
 
-        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<PlovCenterDbContext>());
-        services.AddScoped<IAdminUserRepository, AdminUserRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-        services.AddScoped<IDishRepository, DishRepository>();
-        services.AddScoped<ISiteContentRepository, SiteContentRepository>();
+        services.AddScoped<IApplicationDbContext>(serviceProvider => serviceProvider.GetRequiredService<ApplicationDbContext>());
 
-        services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
-        services.AddScoped<ICurrentUserContextAccessor, HttpCurrentUserContextAccessor>();
+        services.AddSingleton<IDateTimeService, SystemDateTimeService>();
+        services.AddScoped<ICurrentUserService, HttpCurrentUserService>();
         services.AddScoped<IPasswordHashService, PasswordHashService>();
-        services.AddScoped<IAdminTokenService, JwtAdminTokenService>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
         return services;

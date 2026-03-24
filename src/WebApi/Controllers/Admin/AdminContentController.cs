@@ -1,37 +1,37 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PlovCenter.Application.Common.Cqrs;
-using PlovCenter.Application.Contract.Content;
-using PlovCenter.Application.Features.Content;
+using MediatR;
+using PlovCenter.Application.Contract.Content.Commands;
+using PlovCenter.Application.Contract.Content.Queries;
+using PlovCenter.Application.Contract.Content.Responses;
+using PlovCenter.WebApi.Common;
 
 namespace PlovCenter.WebApi.Controllers.Admin;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.AdminAccess)]
 [Route("api/admin/content")]
-public sealed class AdminContentController(IRequestSender requestSender) : ControllerBase
+public sealed class AdminContentController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     public Task<AdminSiteContentResponse> GetContentAsync(CancellationToken cancellationToken)
     {
-        return requestSender.SendAsync(new GetAdminSiteContentQuery(), cancellationToken);
+        return mediator.Send(new GetAdminSiteContentQuery(), cancellationToken);
     }
 
     [HttpPut("about")]
     public Task<AdminSiteContentResponse> UpdateAboutAsync(
-        [FromBody] UpdateAboutContentRequest request,
+        [FromBody] UpdateAboutContentCommand command,
         CancellationToken cancellationToken)
     {
-        return requestSender.SendAsync(new UpdateAboutContentCommand(request.Text, request.PhotoPath), cancellationToken);
+        return mediator.Send(command, cancellationToken);
     }
 
     [HttpPut("contacts")]
     public Task<AdminSiteContentResponse> UpdateContactsAsync(
-        [FromBody] UpdateContactsContentRequest request,
+        [FromBody] UpdateContactsContentCommand command,
         CancellationToken cancellationToken)
     {
-        return requestSender.SendAsync(
-            new UpdateContactsContentCommand(request.Address, request.Phone, request.Hours, request.MapEmbed),
-            cancellationToken);
+        return mediator.Send(command, cancellationToken);
     }
 }

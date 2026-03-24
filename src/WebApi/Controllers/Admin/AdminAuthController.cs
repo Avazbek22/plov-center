@@ -1,26 +1,28 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PlovCenter.Application.Common.Cqrs;
-using PlovCenter.Application.Contract.Auth;
-using PlovCenter.Application.Features.Auth;
+using MediatR;
+using PlovCenter.Application.Contract.Auth.Commands;
+using PlovCenter.Application.Contract.Auth.Queries;
+using PlovCenter.Application.Contract.Auth.Responses;
+using PlovCenter.WebApi.Common;
 
 namespace PlovCenter.WebApi.Controllers.Admin;
 
 [ApiController]
 [Route("api/admin/auth")]
-public sealed class AdminAuthController(IRequestSender requestSender) : ControllerBase
+public sealed class AdminAuthController(IMediator mediator) : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("login")]
-    public Task<LoginResponse> LoginAsync([FromBody] LoginRequest request, CancellationToken cancellationToken)
+    public Task<LoginResponse> LoginAsync([FromBody] LoginAdminCommand command, CancellationToken cancellationToken)
     {
-        return requestSender.SendAsync(new LoginAdminCommand(request.Username, request.Password), cancellationToken);
+        return mediator.Send(command, cancellationToken);
     }
 
-    [Authorize]
+    [Authorize(Policy = AuthorizationPolicies.AdminAccess)]
     [HttpGet("me")]
     public Task<CurrentAdminResponse> GetCurrentAdminAsync(CancellationToken cancellationToken)
     {
-        return requestSender.SendAsync(new GetCurrentAdminQuery(), cancellationToken);
+        return mediator.Send(new GetCurrentAdminQuery(), cancellationToken);
     }
 }

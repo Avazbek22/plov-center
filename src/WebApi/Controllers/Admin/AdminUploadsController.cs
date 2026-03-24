@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PlovCenter.Application.Common.Cqrs;
-using PlovCenter.Application.Contract.Uploads;
-using PlovCenter.Application.Features.Uploads;
+using MediatR;
+using PlovCenter.Application.Contract.Uploads.Commands;
+using PlovCenter.Application.Contract.Uploads.Responses;
 using PlovCenter.WebApi.Common;
 
 namespace PlovCenter.WebApi.Controllers.Admin;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = AuthorizationPolicies.AdminAccess)]
 [Route("api/admin/uploads")]
-public sealed class AdminUploadsController(IRequestSender requestSender) : ControllerBase
+public sealed class AdminUploadsController(IMediator mediator) : ControllerBase
 {
     [HttpPost("image")]
     [Consumes("multipart/form-data")]
@@ -20,8 +20,14 @@ public sealed class AdminUploadsController(IRequestSender requestSender) : Contr
     {
         await using var stream = form.File.OpenReadStream();
 
-        var result = await requestSender.SendAsync(
-            new UploadImageCommand(form.Area, form.File.FileName, form.File.Length, stream),
+        var result = await mediator.Send(
+            new UploadImageCommand
+            {
+                Area = form.Area,
+                FileName = form.File.FileName,
+                Size = form.File.Length,
+                Content = stream
+            },
             cancellationToken);
 
         return new UploadImageResponse(

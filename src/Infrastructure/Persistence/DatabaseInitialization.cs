@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using PlovCenter.Application.Abstractions.Persistence;
-using PlovCenter.Application.Abstractions.Services;
-using PlovCenter.Application.Abstractions.Auth;
-using PlovCenter.Application.Features.Content;
+using PlovCenter.Application.Common.Constants;
+using PlovCenter.Application.Common.Extensions;
+using PlovCenter.Application.Common.Interfaces.Services;
 using PlovCenter.Domain.Entities;
 using PlovCenter.Infrastructure.Configuration;
+using PlovCenter.Infrastructure.Persistence.Contexts;
 
 namespace PlovCenter.Infrastructure.Persistence;
 
@@ -17,7 +17,7 @@ public static class DatabaseInitialization
         await using var scope = serviceProvider.CreateAsyncScope();
         var scopedProvider = scope.ServiceProvider;
 
-        var dbContext = scopedProvider.GetRequiredService<PlovCenterDbContext>();
+        var dbContext = scopedProvider.GetRequiredService<ApplicationDbContext>();
         await dbContext.Database.MigrateAsync(cancellationToken);
 
         await SeedAdminAsync(scopedProvider, cancellationToken);
@@ -33,24 +33,34 @@ public static class DatabaseInitialization
             throw new InvalidOperationException("SeedAdmin configuration must provide both username and password.");
         }
 
-        var dbContext = serviceProvider.GetRequiredService<PlovCenterDbContext>();
-        var adminRepository = serviceProvider.GetRequiredService<IAdminUserRepository>();
+        var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
         var passwordHashService = serviceProvider.GetRequiredService<IPasswordHashService>();
-        var dateTimeProvider = serviceProvider.GetRequiredService<IDateTimeProvider>();
+        var dateTimeService = serviceProvider.GetRequiredService<IDateTimeService>();
+        var normalizedUsername = options.Username.NormalizeTrimmedLowerInvariant();
 
-        var adminUser = await adminRepository.GetByUsernameAsync(options.Username, cancellationToken);
+        var adminUser = await dbContext.AdminUsers
+            .FirstOrDefaultAsync(user => user.Username == normalizedUsername, cancellationToken);
 
         if (adminUser is null)
         {
-            adminUser = new AdminUser(options.Username, string.Empty, options.IsActive, dateTimeProvider.UtcNow);
-            adminUser.UpdatePasswordHash(passwordHashService.HashPassword(adminUser, options.Password), dateTimeProvider.UtcNow);
-            adminRepository.Add(adminUser);
+            adminUser = new AdminUser
+            {
+                Id = Guid.NewGuid(),
+                Username = normalizedUsername,
+                IsActive = options.IsActive,
+                CreatedUtc = dateTimeService.UtcNow,
+                UpdatedUtc = dateTimeService.UtcNow
+            };
+
+            adminUser.PasswordHash = passwordHashService.HashPassword(adminUser, options.Password);
+            dbContext.AdminUsers.Add(adminUser);
         }
         else
         {
-            adminUser.Rename(options.Username, dateTimeProvider.UtcNow);
-            adminUser.SetActive(options.IsActive, dateTimeProvider.UtcNow);
-            adminUser.UpdatePasswordHash(passwordHashService.HashPassword(adminUser, options.Password), dateTimeProvider.UtcNow);
+            adminUser.Username = normalizedUsername;
+            adminUser.IsActive = options.IsActive;
+            adminUser.PasswordHash = passwordHashService.HashPassword(adminUser, options.Password);
+            adminUser.UpdatedUtc = dateTimeService.UtcNow;
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -58,14 +68,23 @@ public static class DatabaseInitialization
 
     private static async Task SeedSiteContentAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
     {
-        var dbContext = serviceProvider.GetRequiredService<PlovCenterDbContext>();
-        var siteContentRepository = serviceProvider.GetRequiredService<ISiteContentRepository>();
-        var dateTimeProvider = serviceProvider.GetRequiredService<IDateTimeProvider>();
+        var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+        var dateTimeService = serviceProvider.GetRequiredService<IDateTimeService>();
 
-        var existingEntries = await siteContentRepository.GetByKeysAsync(SiteContentKeys.All, cancellationToken);
+        var existingEntries = await dbContext.SiteContentEntries
+            .Where(entry => SiteContentKeys.All.Contains(entry.Key))
+            .ToDictionaryAsync(entry => entry.Key, cancellationToken);
+
         var missingEntries = SiteContentKeys.All
             .Where(key => !existingEntries.ContainsKey(key))
-            .Select(key => new SiteContentEntry(key, null, dateTimeProvider.UtcNow))
+            .Select(key => new SiteContentEntry
+            {
+                Id = Guid.NewGuid(),
+                Key = key,
+                Value = null,
+                CreatedUtc = dateTimeService.UtcNow,
+                UpdatedUtc = dateTimeService.UtcNow
+            })
             .ToArray();
 
         if (missingEntries.Length == 0)
@@ -73,7 +92,7 @@ public static class DatabaseInitialization
             return;
         }
 
-        siteContentRepository.AddRange(missingEntries);
+        dbContext.SiteContentEntries.AddRange(missingEntries);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

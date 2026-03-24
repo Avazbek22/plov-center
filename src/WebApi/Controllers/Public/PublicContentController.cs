@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using PlovCenter.Application.Common.Cqrs;
-using PlovCenter.Application.Contract.Content;
-using PlovCenter.Application.Features.Content;
+using MediatR;
+using PlovCenter.Application.Contract.Content.Queries;
+using PlovCenter.Application.Contract.Content.Responses;
 
 namespace PlovCenter.WebApi.Controllers.Public;
 
 [ApiController]
 [Route("api/public/content")]
-public sealed class PublicContentController(IRequestSender requestSender) : ControllerBase
+public sealed class PublicContentController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     public Task<PublicSiteContentResponse> GetContentAsync(CancellationToken cancellationToken)
     {
-        return requestSender.SendAsync(new GetPublicSiteContentQuery(), cancellationToken);
+        return mediator.Send(new GetPublicSiteContentQuery(), cancellationToken);
     }
 }

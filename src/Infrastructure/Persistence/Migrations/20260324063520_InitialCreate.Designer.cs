@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PlovCenter.Infrastructure.Persistence;
+using PlovCenter.Infrastructure.Persistence.Contexts;
 
 #nullable disable
 
 namespace PlovCenter.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(PlovCenterDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260324063520_InitialCreate")]
     partial class InitialCreate
     {
