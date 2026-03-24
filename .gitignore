@@ -52,6 +52,11 @@ _ReSharper*/
 *.ReSharper
 *.resharper
 
+# Node.js (front/)
+node_modules/
+dist/
+front/.vite/
+
 # Misc
 *.tmp
 *.temp
