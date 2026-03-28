@@ -4,27 +4,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-PlovCenter — backend API for a cafe website with admin panel. .NET 10, ASP.NET Core, PostgreSQL via EF Core (Npgsql), MediatR + FluentValidation + JWT auth.
+PlovCenter — backend API + admin panel for a cafe website. Two codebases in one repo: .NET 10 backend (Clean Architecture) and React 19 admin SPA.
 
 ## Commands
 
 ```bash
-# Build
+# Backend — build
 dotnet build
 
-# Run (applies migrations + seeds on startup)
+# Backend — run (auto-migrates + seeds on startup)
 dotnet run --project src/WebApi
 
-# EF Core migrations (run from repo root)
+# Backend — EF Core migrations (from repo root)
 dotnet ef migrations add <Name> --project src/Infrastructure --startup-project src/WebApi
 dotnet ef database update --project src/Infrastructure --startup-project src/WebApi
+
+# Frontend — dev server (proxies /api to localhost:5288)
+cd front && npm run dev
+
+# Frontend — build
+cd front && npm run build
+
+# Frontend — lint
+cd front && npm run lint
 ```
 
 No test projects exist yet.
 
 ## Architecture
 
-Clean Architecture with 5 projects, dependency flows top-to-bottom:
+### Backend — Clean Architecture
+
+5 .NET projects, dependency flows top-to-bottom:
 
 ```
 WebApi -> Application, Application.Contract, Infrastructure
@@ -42,7 +53,26 @@ Domain -> (no dependencies)
 
 **Infrastructure** — EF Core `ApplicationDbContext`, entity configurations, services (JWT, password hashing, file storage, current user). `DatabaseInitialization.ApplyMigrationsAndSeedAsync()` runs on startup — auto-migrates and seeds admin user + site content entries.
 
-**WebApi** — controllers split into `Controllers/Admin/` (require `AdminAccess` policy) and `Controllers/Public/`. Global exception middleware maps `AppException` subtypes to structured `ApiErrorResponse`. Swagger at `/swagger`.
+**WebApi** — controllers split into `Controllers/Admin/` (require `AdminAccess` policy) and `Controllers/Public/`. Global exception middleware maps `AppException` subtypes to structured `ApiErrorResponse`. Swagger at `/swagger`. Backend runs on port 5288.
+
+### Frontend — React Admin SPA
+
+Located in `front/`. Vite dev server on port 3000, proxies `/api` to backend at `localhost:5288`.
+
+```
+front/src/
+  api/          — apiFetch wrapper + per-resource API functions (categories, dishes, content, uploads, auth)
+  auth/         — AuthProvider context + ProtectedRoute
+  components/   — layout/ (AdminLayout, Sidebar), shared/ (ConfirmDialog, ImageUpload)
+  hooks/        — TanStack Query hooks per resource (use-categories, use-dishes, use-content)
+  pages/        — Landing, NotFound, admin/ (Login, Dashboard, Categories, Dishes, Content)
+  theme/        — MUI theme config
+  types/        — TypeScript types mirroring backend DTOs
+```
+
+**Data flow**: `api/*.ts` (apiFetch calls) -> `hooks/use-*.ts` (TanStack Query wrappers with cache invalidation + notistack toasts) -> `pages/admin/*.tsx` (consume hooks).
+
+`apiFetch` in `api/client.ts` auto-attaches JWT from localStorage, handles 401 by clearing auth and redirecting to `/admin/login`.
 
 ## Key Patterns
 
@@ -54,9 +84,13 @@ String normalization: handlers call `.NormalizeTrimmed()` / `.NormalizeOptional(
 
 File uploads: `IFileStorageService` stores to local filesystem under `wwwroot/uploads/`, served as static files.
 
+Frontend hooks pattern: each `use-*.ts` exports a query hook + mutation hooks, handles errors via `handleMutationError` helper that shows notistack toast with `ApiError.response.message`. Mutations invalidate query cache on success.
+
 ## Configuration
 
 Connection string: `ConnectionStrings:Postgres` in `appsettings.json`. JWT settings under `Jwt` section. Seed admin under `SeedAdmin`. CORS origins under `Cors:AllowedOrigins`. File storage root under `FileStorage:RootPath`. Secrets via User Secrets (id: `4d03aec6-0439-4be8-99f6-7b2fe22d0378`).
+
+Frontend path alias: `@` -> `front/src/` (configured in vite.config.ts + tsconfig.app.json).
 
 ## Conventions
 
@@ -65,11 +99,11 @@ Connection string: `ConnectionStrings:Postgres` in `appsettings.json`. JWT setti
 - Each command/query has a matching validator (same folder, `*Validator.cs`)
 - Response mappings in `Mappings/*Mappings.cs` as extension methods
 - Admin routes: `api/admin/{resource}`, public routes: `api/public/{resource}`
+- Frontend API functions return typed promises, hooks wrap them in TanStack Query
+- JWT stored in localStorage under key `plov-center-auth`
 
-## Active Technologies
-- TypeScript 5.9, React 19, Node.js 20+ + Vite 8, @mui/material 7, react-router-dom 7, @tanstack/react-query 5, react-hook-form 7, zod 4, notistack
-- localStorage для JWT-токена (001-admin-frontend-setup)
+## Tech Stack
 
-## Recent Changes
-- 002-admin-crud-panel: Added notistack for toast notifications, CRUD pages for categories/dishes/content
-- 001-admin-frontend-setup: Added TypeScript, React 19, Vite 8, MUI 7, React Router 7, TanStack Query 5, RHF 7, Zod 4
+**Backend**: .NET 10, ASP.NET Core, PostgreSQL + EF Core (Npgsql), MediatR, FluentValidation, JWT Bearer auth
+
+**Frontend**: TypeScript 5.9, React 19, Vite 8, MUI 7 (@mui/material), react-router-dom 7, @tanstack/react-query 5, react-hook-form 7 + @hookform/resolvers, zod 4, notistack 3

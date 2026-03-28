@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Landing from '@/pages/Landing';
+import PublicMenu from '@/pages/PublicMenu';
 import NotFound from '@/pages/NotFound';
 import Login from '@/pages/admin/Login';
 import Dashboard from '@/pages/admin/Dashboard';
@@ -12,7 +12,7 @@ import ProtectedRoute from '@/auth/ProtectedRoute';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Landing />,
+    element: <PublicMenu />,
   },
   {
     path: '/admin/login',
