@@ -208,7 +208,6 @@ export default function PublicMenu() {
     );
   }
 
-  const about = content?.about;
   const contacts = content?.contacts;
 
   return (
@@ -237,11 +236,6 @@ export default function PublicMenu() {
             Плов Центр
           </motion.h1>
           <motion.hr className="pm-hero-divider" variants={fadeUp} />
-          {about?.text && (
-            <motion.p className="pm-hero-about" variants={fadeUp}>
-              {about.text}
-            </motion.p>
-          )}
         </motion.div>
       </header>
 
@@ -259,8 +253,8 @@ export default function PublicMenu() {
                 {cat.name}
                 {i === activeTab && (
                   <motion.div
-                    className="pm-nav-pill"
-                    layoutId="nav-pill"
+                    className="pm-nav-indicator"
+                    layoutId="nav-indicator"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -271,33 +265,36 @@ export default function PublicMenu() {
       )}
 
       {/* Menu sections */}
-      <main className="pm-content pm-container">
-        {categories.map((category, index) => (
-          <div key={category.id}>
-            <MenuSection
-              category={category}
-              onDishClick={setSelectedDish}
-              ref={(el: HTMLDivElement | null) => {
-                if (el) sectionRefs.current.set(index, el);
-                else sectionRefs.current.delete(index);
-              }}
-            />
-            {index === Math.floor(categories.length / 2) - 1 && categories.length >= 3 && (
-              <PhotoDivider image="/divider-1.jpg" scrollY={scrollY} />
-            )}
-          </div>
-        ))}
+      <main className="pm-content">
+        <div className="pm-content-bg" />
+        <div className="pm-container">
+          {categories.map((category, index) => (
+            <div key={category.id}>
+              <MenuSection
+                category={category}
+                onDishClick={setSelectedDish}
+                ref={(el: HTMLDivElement | null) => {
+                  if (el) sectionRefs.current.set(index, el);
+                  else sectionRefs.current.delete(index);
+                }}
+              />
+              {index === Math.floor(categories.length / 2) - 1 && categories.length >= 3 && (
+                <PhotoDivider image="/divider-1.jpg" scrollY={scrollY} />
+              )}
+            </div>
+          ))}
 
-        {categories.length === 0 && (
-          <div className="pm-empty" style={{ minHeight: '40vh' }}>
-            <p className="pm-empty-text">Меню скоро появится</p>
-            {contacts?.phone && (
-              <a className="pm-empty-action" href={`tel:${contacts.phone.replace(/\s/g, '')}`}>
-                Позвонить: {contacts.phone}
-              </a>
-            )}
-          </div>
-        )}
+          {categories.length === 0 && (
+            <div className="pm-empty" style={{ minHeight: '40vh' }}>
+              <p className="pm-empty-text">Меню скоро появится</p>
+              {contacts?.phone && (
+                <a className="pm-empty-action" href={`tel:${contacts.phone.replace(/\s/g, '')}`}>
+                  Позвонить: {contacts.phone}
+                </a>
+              )}
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Contacts */}
@@ -389,13 +386,7 @@ function DishCard({ dish }: { dish: PublicMenuDish }) {
 function DishListItem({ dish }: { dish: PublicMenuDish }) {
   return (
     <div className="pm-dish-item">
-      <div className="pm-dish-item-placeholder">
-        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <ellipse cx="32" cy="38" rx="22" ry="10" />
-          <path d="M10 38c0-12 9.8-22 22-22s22 10 22 22" />
-          <path d="M32 16v-4M28 13l4-4 4 4" />
-        </svg>
-      </div>
+      <div className="pm-dish-item-placeholder" />
       <div className="pm-dish-item-body">
         <div className="pm-dish-item-name">{dish.name}</div>
         {dish.description && (
@@ -497,13 +488,7 @@ function DishModal({ dish, onClose }: { dish: PublicMenuDish; onClose: () => voi
             />
           </div>
         ) : (
-          <div className="pm-modal-placeholder">
-            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <ellipse cx="32" cy="38" rx="22" ry="10" />
-              <path d="M10 38c0-12 9.8-22 22-22s22 10 22 22" />
-              <path d="M32 16v-4M28 13l4-4 4 4" />
-            </svg>
-          </div>
+          <div className="pm-modal-placeholder" />
         )}
 
         <div className="pm-modal-body">
