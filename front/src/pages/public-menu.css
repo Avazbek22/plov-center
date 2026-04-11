@@ -811,13 +811,13 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
 }
 
 .pm-modal {
@@ -829,7 +829,35 @@
   max-height: 85vh;
   max-height: 85dvh;
   overflow-y: auto;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+
+/* Bottom sheet mode (mobile) */
+.pm-modal--sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 100%;
+  max-height: 90dvh;
+  border-radius: 20px 20px 0 0;
+  margin: 0;
+  touch-action: pan-y;
+}
+
+.pm-modal-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--text-muted);
+  opacity: 0.3;
+  margin: 10px auto 0;
+}
+
+.pm-modal-photo-wrap {
+  width: 100%;
+  max-height: 320px;
+  overflow: hidden;
 }
 
 .pm-modal-photo {
@@ -837,6 +865,7 @@
   max-height: 320px;
   object-fit: cover;
   display: block;
+  will-change: transform;
 }
 
 .pm-modal-placeholder {
@@ -900,10 +929,15 @@
   justify-content: center;
   transition: background 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+  z-index: 2;
 }
 
 .pm-modal-close:hover {
   background: rgba(0, 0, 0, 0.6);
+}
+
+.pm-modal--sheet .pm-modal-close {
+  top: 16px;
 }
 
 /* ══════════════

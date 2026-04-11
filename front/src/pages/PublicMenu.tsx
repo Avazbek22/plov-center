@@ -30,6 +30,18 @@ function useScrollY() {
   return scrollY;
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return isMobile;
+}
+
 /* ── Animation variants ── */
 
 const heroTitle = {
@@ -425,6 +437,8 @@ function PhotoDivider({ image, scrollY }: { image: string; scrollY: number }) {
 /* ── Dish Modal ── */
 
 function DishModal({ dish, onClose }: { dish: PublicMenuDish; onClose: () => void }) {
+  const isMobile = useIsMobile();
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -441,24 +455,53 @@ function DishModal({ dish, onClose }: { dish: PublicMenuDish; onClose: () => voi
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.25 }}
       onClick={onClose}
     >
       <motion.div
-        className="pm-modal"
-        initial={{ opacity: 0, scale: 0.95, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 16 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
+        className={`pm-modal ${isMobile ? 'pm-modal--sheet' : ''}`}
+        initial={isMobile
+          ? { y: '100%' }
+          : { opacity: 0, scale: 0.92 }
+        }
+        animate={isMobile
+          ? { y: 0 }
+          : { opacity: 1, scale: 1 }
+        }
+        exit={isMobile
+          ? { y: '100%' }
+          : { opacity: 0, scale: 0.92 }
+        }
+        transition={isMobile
+          ? { type: 'spring', stiffness: 350, damping: 35 }
+          : { type: 'spring', stiffness: 300, damping: 25 }
+        }
+        drag={isMobile ? 'y' : false}
+        dragConstraints={{ top: 0 }}
+        dragElastic={0.1}
+        onDragEnd={(_e, info) => {
+          if (info.offset.y > 100) onClose();
+        }}
         onClick={(e) => e.stopPropagation()}
         style={{ position: 'relative' }}
       >
+        {isMobile && <div className="pm-modal-handle" />}
+
         <button className="pm-modal-close" onClick={onClose} type="button" aria-label="Закрыть">
           &times;
         </button>
 
         {dish.photoPath ? (
-          <img className="pm-modal-photo" src={imageUrl(dish.photoPath)!} alt={dish.name} />
+          <div className="pm-modal-photo-wrap">
+            <motion.img
+              className="pm-modal-photo"
+              src={imageUrl(dish.photoPath)!}
+              alt={dish.name}
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.06 }}
+              transition={{ duration: 8, ease: 'linear' }}
+            />
+          </div>
         ) : (
           <div className="pm-modal-placeholder">
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
