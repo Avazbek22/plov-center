@@ -993,14 +993,14 @@
 }
 
 .pm-skeleton-bone {
-  background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.06) 75%);
+  background: linear-gradient(90deg, rgba(196,132,29,0.06) 25%, rgba(196,132,29,0.12) 50%, rgba(196,132,29,0.06) 75%);
   background-size: 200% 100%;
   animation: pm-shimmer 1.5s ease-in-out infinite;
   border-radius: var(--radius-sm);
 }
 
 .pm-skeleton-bone--light {
-  background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 75%);
+  background: linear-gradient(90deg, rgba(196,132,29,0.03) 25%, rgba(196,132,29,0.07) 50%, rgba(196,132,29,0.03) 75%);
   background-size: 200% 100%;
   animation: pm-shimmer 1.5s ease-in-out infinite;
   border-radius: var(--radius-sm);
