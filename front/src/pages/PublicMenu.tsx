@@ -215,7 +215,7 @@ export default function PublicMenu() {
     <MotionConfig reducedMotion="user">
     <div className="pm">
       {/* Hero */}
-      <header className={`pm-hero${about?.photoPath ? ' pm-hero--with-image' : ''}`}>
+      <header className="pm-hero">
         <motion.div
           className="pm-hero-bg"
           style={{ y: scrollY * 0.3 }}
@@ -243,13 +243,6 @@ export default function PublicMenu() {
             </motion.p>
           )}
         </motion.div>
-        {about?.photoPath && (
-          <img
-            className="pm-hero-photo"
-            src={imageUrl(about.photoPath)!}
-            alt="Плов Центр"
-          />
-        )}
       </header>
 
       {/* Category navigation */}

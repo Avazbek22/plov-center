@@ -109,7 +109,7 @@
 .pm-hero-bg {
   position: absolute;
   inset: 0;
-  background: url('/hero-bg.jpg') center 40% / cover no-repeat;
+  background: url('/hero-bg.jpg') center center / cover no-repeat;
   z-index: 0;
   will-change: transform;
 }
