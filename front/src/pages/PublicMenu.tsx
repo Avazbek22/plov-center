@@ -267,15 +267,19 @@ export default function PublicMenu() {
       {/* Menu sections */}
       <main className="pm-content pm-container">
         {categories.map((category, index) => (
-          <MenuSection
-            key={category.id}
-            category={category}
-            onDishClick={setSelectedDish}
-            ref={(el: HTMLDivElement | null) => {
-              if (el) sectionRefs.current.set(index, el);
-              else sectionRefs.current.delete(index);
-            }}
-          />
+          <div key={category.id}>
+            <MenuSection
+              category={category}
+              onDishClick={setSelectedDish}
+              ref={(el: HTMLDivElement | null) => {
+                if (el) sectionRefs.current.set(index, el);
+                else sectionRefs.current.delete(index);
+              }}
+            />
+            {index === Math.floor(categories.length / 2) - 1 && categories.length >= 3 && (
+              <PhotoDivider image="/divider-1.jpg" scrollY={scrollY} />
+            )}
+          </div>
         ))}
 
         {categories.length === 0 && (
@@ -392,6 +396,27 @@ function DishListItem({ dish }: { dish: PublicMenuDish }) {
           <div className="pm-dish-item-desc">{dish.description}</div>
         )}
         <div className="pm-dish-item-price">{formatPrice(dish.price)} сум</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Parallax Photo Divider ── */
+
+function PhotoDivider({ image, scrollY }: { image: string; scrollY: number }) {
+  return (
+    <div className="pm-divider">
+      <motion.div
+        className="pm-divider-bg"
+        style={{
+          backgroundImage: `url(${image})`,
+          y: scrollY * 0.15,
+        }}
+      />
+      <div className="pm-divider-ornament">
+        <span className="pm-divider-ornament-line" />
+        <span className="pm-divider-ornament-dot" />
+        <span className="pm-divider-ornament-line" />
       </div>
     </div>
   );

@@ -524,6 +524,74 @@
 }
 
 /* ══════════════
+   Parallax Photo Divider
+   ══════════════ */
+.pm-divider {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  margin: 2rem calc(-1 * var(--px));
+}
+
+.pm-divider-bg {
+  position: absolute;
+  inset: -60px 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+.pm-divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(30, 20, 10, 0.5),
+    rgba(30, 20, 10, 0.35),
+    rgba(30, 20, 10, 0.5)
+  );
+}
+
+.pm-divider-ornament {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 251, 245, 0.6);
+}
+
+.pm-divider-ornament-line {
+  width: 40px;
+  height: 1px;
+  background: currentColor;
+}
+
+.pm-divider-ornament-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+}
+
+@media (min-width: 640px) {
+  .pm-divider {
+    height: 240px;
+  }
+}
+
+@media (min-width: 960px) {
+  .pm-divider {
+    height: 280px;
+  }
+}
+
+/* ══════════════
    Contacts Footer
    ══════════════ */
 .pm-footer {
