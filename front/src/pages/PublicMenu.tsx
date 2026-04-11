@@ -317,12 +317,18 @@ function MenuSection({ category, onDishClick, ref }: MenuSectionProps) {
       viewport={{ once: true, margin: '0px 0px -10% 0px' }}
       variants={staggerChildren}
     >
-      <motion.h2 className="pm-section-header" variants={fadeUp}>
+      <motion.h2
+        className="pm-section-header"
+        variants={sectionHeaderReveal}
+      >
         {category.name}
       </motion.h2>
-      <motion.hr className="pm-section-line" variants={fadeUp} />
+      <motion.div className="pm-section-line" variants={lineGrow} />
 
-      <div className="pm-section-dishes">
+      <motion.div
+        className="pm-section-dishes"
+        variants={staggerDishes}
+      >
         {category.dishes.map((dish) => (
           <motion.div key={dish.id} variants={dishCard} onClick={() => onDishClick(dish)} style={{ cursor: 'pointer' }}>
             {dish.photoPath ? (
@@ -332,7 +338,7 @@ function MenuSection({ category, onDishClick, ref }: MenuSectionProps) {
             )}
           </motion.div>
         ))}
-      </div>
+      </motion.div>
     </motion.section>
   );
 }
@@ -342,12 +348,14 @@ function MenuSection({ category, onDishClick, ref }: MenuSectionProps) {
 function DishCard({ dish }: { dish: PublicMenuDish }) {
   return (
     <div className="pm-dish-card">
-      <img
-        className="pm-dish-card-photo"
-        src={imageUrl(dish.photoPath)!}
-        alt={dish.name}
-        loading="lazy"
-      />
+      <div className="pm-dish-card-photo-wrap">
+        <img
+          className="pm-dish-card-photo"
+          src={imageUrl(dish.photoPath)!}
+          alt={dish.name}
+          loading="lazy"
+        />
+      </div>
       <div className="pm-dish-card-body">
         <div className="pm-dish-card-name">{dish.name}</div>
         {dish.description && (

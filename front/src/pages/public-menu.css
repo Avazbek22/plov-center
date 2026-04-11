@@ -362,22 +362,40 @@
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
 }
 
-@media (hover: hover) {
-  .pm-dish-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-card-hover);
-    border-color: var(--border-accent);
-  }
+.pm-dish-card-photo-wrap {
+  width: 100%;
+  height: var(--card-img-h);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .pm-dish-card-photo {
   width: 100%;
-  height: var(--card-img-h);
+  height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s ease-out;
+}
+
+@media (hover: hover) {
+  .pm-dish-card:hover {
+    box-shadow: var(--shadow-card-rich);
+    border-color: var(--border-accent);
+  }
+
+  .pm-dish-card:hover .pm-dish-card-photo {
+    transform: scale(1.08);
+  }
+}
+
+@media (hover: none) {
+  .pm-dish-card:active {
+    transform: scale(0.97);
+    transition: transform 0.15s ease;
+  }
 }
 
 .pm-dish-card-body {
@@ -428,14 +446,20 @@
   flex-direction: column;
   height: calc(var(--card-img-h) + var(--card-body-h) + 2px);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
 }
 
 @media (hover: hover) {
   .pm-dish-item:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-card-hover);
+    box-shadow: var(--shadow-card-rich);
     border-color: var(--border-accent);
+  }
+}
+
+@media (hover: none) {
+  .pm-dish-item:active {
+    transform: scale(0.97);
+    transition: transform 0.15s ease;
   }
 }
 
