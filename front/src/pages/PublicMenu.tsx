@@ -9,21 +9,78 @@ function formatPrice(price: number): string {
   return price.toLocaleString('ru-RU');
 }
 
+/* ── Scroll parallax hook ── */
+
+function useScrollY() {
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return scrollY;
+}
+
 /* ── Animation variants ── */
 
+const heroTitle = {
+  hidden: { opacity: 0, letterSpacing: '0.25em' },
+  visible: {
+    opacity: 1,
+    letterSpacing: '0.02em',
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' as const } },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 };
 
 const staggerChildren = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.04 } },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
-const dishFade = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.25, ease: 'easeOut' as const } },
+const sectionHeaderReveal = {
+  hidden: { opacity: 0, clipPath: 'inset(0 100% 0 0)' },
+  visible: {
+    opacity: 1,
+    clipPath: 'inset(0 0% 0 0)',
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const lineGrow = {
+  hidden: { width: 0 },
+  visible: {
+    width: 32,
+    transition: { duration: 0.4, ease: 'easeOut', delay: 0.2 },
+  },
+};
+
+const dishCard = {
+  hidden: { opacity: 0, y: 20, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.35, ease: 'easeOut' },
+  },
+};
+
+const staggerDishes = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
 /* ── Page ── */
@@ -39,6 +96,7 @@ export default function PublicMenu() {
   const isScrollingByClick = useRef(false);
 
   const [selectedDish, setSelectedDish] = useState<PublicMenuDish | null>(null);
+  const scrollY = useScrollY();
 
   const categories = menu?.categories ?? [];
 
@@ -146,18 +204,23 @@ export default function PublicMenu() {
       {/* Hero */}
       <header className={`pm-hero${about?.photoPath ? ' pm-hero--with-image' : ''}`}>
         <motion.div
+          className="pm-hero-bg"
+          style={{ y: scrollY * 0.3 }}
+        />
+        <motion.div
           className="pm-hero-inner"
           initial="hidden"
           animate="visible"
           variants={staggerChildren}
         >
           <motion.div className="pm-hero-ornament" variants={fadeUp}>
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              <path d="M20 2L26 14H38L28 22L32 38L20 28L8 38L12 22L2 14H14L20 2Z" stroke="currentColor" strokeWidth="1" fill="currentColor" fillOpacity="0.15" />
-              <circle cx="20" cy="20" r="4" stroke="currentColor" strokeWidth="1" fill="currentColor" fillOpacity="0.3" />
-            </svg>
+            <span className="pm-hero-ornament-diamond" />
+            <span className="pm-hero-ornament-diamond" />
+            <span className="pm-hero-ornament-diamond" />
+            <span className="pm-hero-ornament-diamond" />
+            <span className="pm-hero-ornament-diamond" />
           </motion.div>
-          <motion.h1 className="pm-hero-title" variants={fadeUp}>
+          <motion.h1 className="pm-hero-title" variants={heroTitle}>
             Плов Центр
           </motion.h1>
           <motion.hr className="pm-hero-divider" variants={fadeUp} />
@@ -261,7 +324,7 @@ function MenuSection({ category, onDishClick, ref }: MenuSectionProps) {
 
       <div className="pm-section-dishes">
         {category.dishes.map((dish) => (
-          <motion.div key={dish.id} variants={dishFade} onClick={() => onDishClick(dish)} style={{ cursor: 'pointer' }}>
+          <motion.div key={dish.id} variants={dishCard} onClick={() => onDishClick(dish)} style={{ cursor: 'pointer' }}>
             {dish.photoPath ? (
               <DishCard dish={dish} />
             ) : (

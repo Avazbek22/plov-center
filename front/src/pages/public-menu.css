@@ -103,11 +103,18 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-  background: url('/hero-bg.jpg') center 40% / cover no-repeat;
-  min-height: 340px;
+  min-height: 380px;
 }
 
-/* Dark gradient overlay — text readable, image visible at bottom */
+.pm-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/hero-bg.jpg') center 40% / cover no-repeat;
+  z-index: 0;
+  will-change: transform;
+}
+
+/* Softer gradient overlay — food visible through top */
 .pm-hero::before {
   content: '';
   position: absolute;
@@ -115,15 +122,15 @@
   background:
     linear-gradient(
       to bottom,
-      rgba(30, 20, 10, 0.88) 0%,
-      rgba(30, 20, 10, 0.72) 50%,
-      rgba(30, 20, 10, 0.45) 80%,
-      rgba(30, 20, 10, 0.85) 100%
+      rgba(30, 20, 10, 0.45) 0%,
+      rgba(30, 20, 10, 0.35) 30%,
+      rgba(30, 20, 10, 0.55) 65%,
+      rgba(30, 20, 10, 0.82) 100%
     );
   z-index: 1;
 }
 
-/* Warm vignette for depth */
+/* Warm vignette */
 .pm-hero::after {
   content: '';
   position: absolute;
@@ -131,7 +138,7 @@
   background: radial-gradient(
     ellipse 70% 60% at 50% 45%,
     transparent 0%,
-    rgba(20, 12, 5, 0.4) 100%
+    rgba(20, 12, 5, 0.35) 100%
   );
   z-index: 1;
 }
@@ -139,20 +146,40 @@
 .pm-hero-inner {
   position: relative;
   z-index: 2;
-  padding: 4rem var(--px) 3rem;
+  padding: 5rem var(--px) 3.5rem;
 }
 
 .pm-hero--with-image .pm-hero-inner {
   padding-bottom: 2rem;
 }
 
+/* Adras ornament divider */
 .pm-hero-ornament {
-  display: inline-block;
-  color: var(--accent);
-  line-height: 1;
-  margin-bottom: 1.25rem;
-  opacity: 0.7;
-  filter: drop-shadow(0 0 8px rgba(196, 132, 29, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.pm-hero-ornament-diamond {
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  border: 1.5px solid var(--accent);
+}
+
+.pm-hero-ornament-diamond:nth-child(2) {
+  width: 12px;
+  height: 12px;
+  background: rgba(196, 132, 29, 0.3);
+}
+
+.pm-hero-ornament-diamond:nth-child(4) {
+  width: 12px;
+  height: 12px;
+  background: rgba(196, 132, 29, 0.3);
 }
 
 .pm-hero-title {
@@ -162,7 +189,7 @@
   line-height: 1.1;
   margin-bottom: 0.75rem;
   text-wrap: balance;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
 }
 
 .pm-hero-divider {
@@ -178,7 +205,7 @@
 .pm-hero-about {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: rgba(255, 251, 245, 0.8);
+  color: rgba(255, 251, 245, 0.85);
   max-width: 420px;
   margin: 0 auto;
   text-wrap: pretty;
@@ -599,15 +626,11 @@
   }
 
   .pm-hero {
-    min-height: 380px;
+    min-height: 420px;
   }
 
   .pm-hero-title {
-    font-size: 3.2rem;
-  }
-
-  .pm-hero-photo {
-    max-height: 300px;
+    font-size: 3.4rem;
   }
 }
 
@@ -619,10 +642,6 @@
     --card-body-h: 120px;
   }
 
-  .pm-hero {
-    min-height: 420px;
-  }
-
   .pm-section-dishes {
     grid-template-columns: repeat(2, 1fr);
     gap: 18px;
@@ -630,10 +649,6 @@
 
   .pm-section-header {
     font-size: 1.75rem;
-  }
-
-  .pm-hero-photo {
-    max-height: 340px;
   }
 }
 
@@ -646,7 +661,7 @@
   }
 
   .pm-hero {
-    min-height: 480px;
+    min-height: 520px;
   }
 
   .pm-section-dishes {
@@ -655,21 +670,17 @@
   }
 
   .pm-hero-inner {
-    padding-top: 5.5rem;
-    padding-bottom: 3.5rem;
+    padding-top: 6rem;
+    padding-bottom: 4rem;
   }
 
   .pm-hero-title {
-    font-size: 3.8rem;
+    font-size: 4.2rem;
   }
 
   .pm-hero-about {
-    font-size: 1rem;
+    font-size: 1.05rem;
     max-width: 500px;
-  }
-
-  .pm-hero-photo {
-    max-height: 380px;
   }
 
   .pm-section-header {
