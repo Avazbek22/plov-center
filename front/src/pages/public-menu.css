@@ -601,12 +601,33 @@
 }
 
 .pm-footer {
-  background: var(--footer-bg);
+  position: relative;
   color: var(--footer-text);
   padding-top: 2.5rem;
   padding-bottom: 3rem;
   margin-top: 0;
   border-top: none;
+  overflow: hidden;
+}
+
+.pm-footer-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/divider-2.jpg') center center / cover no-repeat;
+  z-index: 0;
+}
+
+.pm-footer-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 20, 10, 0.78);
+  z-index: 1;
+}
+
+.pm-footer > :not(.pm-footer-bg) {
+  position: relative;
+  z-index: 2;
 }
 
 .pm-footer-divider {

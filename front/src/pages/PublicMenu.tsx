@@ -555,8 +555,10 @@ function ContactsFooter({ contacts }: { contacts: PublicContacts }) {
   return (
     <>
       <div className="pm-footer-transition" />
-      <footer className="pm-footer pm-container">
+      <footer className="pm-footer">
+        <div className="pm-footer-bg" />
         <motion.div
+          className="pm-container"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-40px' }}
