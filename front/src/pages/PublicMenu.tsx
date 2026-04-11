@@ -251,6 +251,13 @@ export default function PublicMenu() {
                 type="button"
               >
                 {cat.name}
+                {i === activeTab && (
+                  <motion.div
+                    className="pm-nav-pill"
+                    layoutId="nav-pill"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
               </button>
             ))}
           </div>

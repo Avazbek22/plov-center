@@ -261,28 +261,35 @@
   background: transparent;
   border: 1.5px solid var(--border);
   cursor: pointer;
-  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+  transition: color 0.25s ease, border-color 0.25s ease;
   white-space: nowrap;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 1;
 }
 
 .pm-nav-item:hover {
   color: var(--text);
   border-color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.03);
 }
 
 .pm-nav-item--active {
-  background: var(--accent);
   color: #FFFBF5;
-  border-color: var(--accent);
+  border-color: transparent;
 }
 
 .pm-nav-item--active:hover {
-  background: var(--accent-hover);
   color: #FFFBF5;
-  border-color: var(--accent-hover);
+  border-color: transparent;
+}
+
+.pm-nav-pill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  border-radius: 100px;
+  z-index: -1;
 }
 
 /* ══════════════
