@@ -31,10 +31,11 @@ function useScrollY() {
 }
 
 function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia('(max-width: 639px)').matches
+  );
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)');
-    setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
@@ -49,13 +50,13 @@ const heroTitle = {
   visible: {
     opacity: 1,
     letterSpacing: '0.02em',
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const staggerChildren = {
@@ -68,7 +69,7 @@ const sectionHeaderReveal = {
   visible: {
     opacity: 1,
     clipPath: 'inset(0 0% 0 0)',
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -76,7 +77,7 @@ const lineGrow = {
   hidden: { width: 0 },
   visible: {
     width: 32,
-    transition: { duration: 0.4, ease: 'easeOut', delay: 0.2 },
+    transition: { duration: 0.4, ease: 'easeOut' as const, delay: 0.2 },
   },
 };
 
@@ -86,7 +87,7 @@ const dishCard = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.35, ease: 'easeOut' },
+    transition: { duration: 0.35, ease: 'easeOut' as const },
   },
 };
 
