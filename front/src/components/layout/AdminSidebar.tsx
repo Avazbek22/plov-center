@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'motion/react';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -20,21 +21,40 @@ export default function AdminSidebar() {
 
   return (
     <List component="nav" sx={{ px: 1, pt: 1.5 }}>
-      {navItems.map(({ label, icon, path, exact }) => (
-        <ListItemButton
-          key={path}
-          component={Link}
-          to={path}
-          selected={exact ? pathname === path : pathname.startsWith(path)}
-          sx={{ mb: 0.5, py: 1 }}
-        >
-          <ListItemIcon sx={{ fontSize: 20 }}>{icon}</ListItemIcon>
-          <ListItemText
-            primary={label}
-            primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 500 }}
-          />
-        </ListItemButton>
-      ))}
+      {navItems.map(({ label, icon, path, exact }) => {
+        const isActive = exact ? pathname === path : pathname.startsWith(path);
+
+        return (
+          <ListItemButton
+            key={path}
+            component={Link}
+            to={path}
+            selected={isActive}
+            sx={{ mb: 0.5, py: 1, position: 'relative' }}
+          >
+            {isActive && (
+              <motion.div
+                layoutId="sidebar-indicator"
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  top: 4,
+                  bottom: 4,
+                  width: 3,
+                  borderRadius: 2,
+                  background: '#C4841D',
+                }}
+              />
+            )}
+            <ListItemIcon sx={{ fontSize: 20 }}>{icon}</ListItemIcon>
+            <ListItemText
+              primary={label}
+              primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 500 }}
+            />
+          </ListItemButton>
+        );
+      })}
     </List>
   );
 }
