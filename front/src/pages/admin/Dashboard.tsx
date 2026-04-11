@@ -1,4 +1,6 @@
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { animate } from 'motion';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -14,6 +16,29 @@ import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import { useAuth } from '@/auth/auth-context';
 import { useCategoriesQuery } from '@/hooks/use-categories';
 import { useDishesQuery } from '@/hooks/use-dishes';
+
+function AnimatedNumber({ value }: { value: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const prevValue = useRef(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const controls = animate(prevValue.current, value, {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => {
+        el.textContent = Math.round(v).toString();
+      },
+    });
+
+    prevValue.current = value;
+    return () => controls.stop();
+  }, [value]);
+
+  return <span ref={ref}>0</span>;
+}
 
 export default function Dashboard() {
   const { session } = useAuth();
@@ -63,7 +88,7 @@ export default function Dashboard() {
                     lineHeight: 1,
                   }}
                 >
-                  {s.value}
+                  <AnimatedNumber value={s.value} />
                 </Typography>
                 <Typography
                   sx={{
