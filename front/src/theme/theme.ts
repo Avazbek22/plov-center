@@ -110,7 +110,8 @@ const theme = createTheme({
     MuiTableRow: {
       styleOverrides: {
         root: {
-          '&:hover': { backgroundColor: palette.hoverBg },
+          transition: 'background-color 0.2s ease',
+          '&:hover': { backgroundColor: 'rgba(196, 132, 29, 0.08)' },
           '&:last-child td': { borderBottom: 0 },
         },
       },
