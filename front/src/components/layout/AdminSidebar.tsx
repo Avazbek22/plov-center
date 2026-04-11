@@ -19,16 +19,20 @@ export default function AdminSidebar() {
   const { pathname } = useLocation();
 
   return (
-    <List component="nav" sx={{ pt: 1 }}>
+    <List component="nav" sx={{ px: 1, pt: 1.5 }}>
       {navItems.map(({ label, icon, path, exact }) => (
         <ListItemButton
           key={path}
           component={Link}
           to={path}
           selected={exact ? pathname === path : pathname.startsWith(path)}
+          sx={{ mb: 0.5, py: 1 }}
         >
-          <ListItemIcon>{icon}</ListItemIcon>
-          <ListItemText primary={label} />
+          <ListItemIcon sx={{ fontSize: 20 }}>{icon}</ListItemIcon>
+          <ListItemText
+            primary={label}
+            primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 500 }}
+          />
         </ListItemButton>
       ))}
     </List>

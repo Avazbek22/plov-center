@@ -22,6 +22,7 @@ import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Container from '@mui/material/Container';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -182,11 +183,14 @@ export default function Categories() {
   };
 
   return (
-    <Box>
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" fontWeight={600}>
-          Категории
-        </Typography>
+        <Box>
+          <Typography variant="h5" fontWeight={600}>
+            Категории
+          </Typography>
+          <Box sx={{ width: 40, height: 2, bgcolor: 'primary.main', borderRadius: 1, mt: 1 }} />
+        </Box>
         <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreate}>
           Добавить категорию
         </Button>
@@ -251,6 +255,6 @@ export default function Categories() {
         onCancel={() => setDeletingCategory(null)}
         loading={deleteMutation.isPending}
       />
-    </Box>
+    </Container>
   );
 }

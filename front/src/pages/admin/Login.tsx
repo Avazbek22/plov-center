@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import { motion } from 'motion/react';
 import { useAuth } from '@/auth/auth-context';
 import { ApiError } from '@/api/client';
 
@@ -20,6 +21,8 @@ const loginSchema = z.object({
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
+
+const MotionCard = motion.create(Card);
 
 export default function Login() {
   const navigate = useNavigate();
@@ -55,15 +58,38 @@ export default function Login() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: 'background.default',
+        bgcolor: 'secondary.main',
+        background: (theme) => `radial-gradient(circle at 50% 40%, ${theme.palette.primary.main}0F 0%, transparent 60%), ${theme.palette.secondary.main}`,
       }}
     >
-      <Card sx={{ width: '100%', maxWidth: 400 }}>
-        <CardContent>
+      <MotionCard
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        sx={{ width: '100%', maxWidth: 400, borderRadius: '16px' }}
+      >
+        <CardContent sx={{ p: 3 }}>
           <Stack spacing={3} component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-            <Typography variant="h5" component="h1" textAlign="center" fontWeight={600}>
-              Вход в админ-панель
-            </Typography>
+            <Box>
+              <Typography
+                variant="h5"
+                component="h1"
+                textAlign="center"
+                fontWeight={600}
+                sx={{ fontFamily: '"Young Serif", Georgia, serif', mb: 1.5 }}
+              >
+                Вход
+              </Typography>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 2,
+                  bgcolor: 'primary.main',
+                  mx: 'auto',
+                  borderRadius: 1,
+                }}
+              />
+            </Box>
 
             {serverError && <Alert severity="error">{serverError}</Alert>}
 
@@ -95,7 +121,7 @@ export default function Login() {
             </Button>
           </Stack>
         </CardContent>
-      </Card>
+      </MotionCard>
     </Box>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { imageUrl } from '@/utils/image-url';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -121,9 +122,12 @@ export default function Dishes() {
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2, flexWrap: 'wrap' }}>
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          Блюда
-        </Typography>
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="h4">
+            Блюда
+          </Typography>
+          <Box sx={{ width: 40, height: 2, bgcolor: 'primary.main', borderRadius: 1, mt: 1 }} />
+        </Box>
 
         <FormControl size="small" sx={{ minWidth: 200 }}>
           <InputLabel id="category-filter-label">Категория</InputLabel>
@@ -178,7 +182,7 @@ export default function Dishes() {
                       {dish.photoPath ? (
                         <Box
                           component="img"
-                          src={dish.photoPath}
+                          src={imageUrl(dish.photoPath)!}
                           alt={dish.name}
                           sx={{
                             width: 40,
@@ -195,7 +199,7 @@ export default function Dishes() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            bgcolor: 'action.hover',
+                            bgcolor: '#F5ECD7',
                             borderRadius: 0.5,
                           }}
                         >

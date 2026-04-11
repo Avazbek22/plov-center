@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
 import { useContentQuery, useUpdateAbout, useUpdateContacts } from '@/hooks/use-content'
 import ImageUpload from '@/components/shared/ImageUpload'
@@ -53,15 +54,18 @@ export default function Content() {
   }
 
   return (
-    <Box>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Контент сайта
-      </Typography>
+    <Container maxWidth="md" sx={{ mt: 2 }}>
+      <Box>
+        <Typography variant="h4">
+          Контент сайта
+        </Typography>
+        <Box sx={{ width: 40, height: 2, bgcolor: 'primary.main', borderRadius: 1, mt: 1, mb: 3 }} />
+      </Box>
 
       <Stack spacing={3}>
         <Card>
           <CardContent>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               О нас
             </Typography>
 
@@ -112,7 +116,7 @@ export default function Content() {
 
         <Card>
           <CardContent>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Контакты
             </Typography>
 
@@ -173,6 +177,6 @@ export default function Content() {
           </CardContent>
         </Card>
       </Stack>
-    </Box>
+    </Container>
   )
 }

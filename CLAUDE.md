@@ -65,14 +65,19 @@ front/src/
   auth/         — AuthProvider context + ProtectedRoute
   components/   — layout/ (AdminLayout, Sidebar), shared/ (ConfirmDialog, ImageUpload)
   hooks/        — TanStack Query hooks per resource (use-categories, use-dishes, use-content)
-  pages/        — Landing, NotFound, admin/ (Login, Dashboard, Categories, Dishes, Content)
+  pages/        — PublicMenu (root `/`), NotFound, admin/ (Login, Dashboard, Categories, Dishes, Content)
   theme/        — MUI theme config
   types/        — TypeScript types mirroring backend DTOs
+  utils/        — helpers (imageUrl path resolver)
 ```
 
 **Data flow**: `api/*.ts` (apiFetch calls) -> `hooks/use-*.ts` (TanStack Query wrappers with cache invalidation + notistack toasts) -> `pages/admin/*.tsx` (consume hooks).
 
 `apiFetch` in `api/client.ts` auto-attaches JWT from localStorage, handles 401 by clearing auth and redirecting to `/admin/login`.
+
+**Routing**: `/` serves `PublicMenu` (public QR-menu page), `/admin/login` is standalone, `/admin/*` is wrapped in `ProtectedRoute` + `AdminLayout`.
+
+**Public pages** use `api/public.ts` + `hooks/use-public-menu.ts` — read-only queries, no auth. Public menu page uses `motion` (Framer Motion) for animations and plain CSS (`public-menu.css`) instead of MUI.
 
 ## Key Patterns
 
@@ -106,4 +111,4 @@ Frontend path alias: `@` -> `front/src/` (configured in vite.config.ts + tsconfi
 
 **Backend**: .NET 10, ASP.NET Core, PostgreSQL + EF Core (Npgsql), MediatR, FluentValidation, JWT Bearer auth
 
-**Frontend**: TypeScript 5.9, React 19, Vite 8, MUI 7 (@mui/material), react-router-dom 7, @tanstack/react-query 5, react-hook-form 7 + @hookform/resolvers, zod 4, notistack 3
+**Frontend**: TypeScript 5.9, React 19, Vite 8, MUI 7 (@mui/material), react-router-dom 7, @tanstack/react-query 5, react-hook-form 7 + @hookform/resolvers, zod 4, notistack 3, motion 12 (Framer Motion)

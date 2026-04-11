@@ -5,6 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { uploadImage } from '@/api/uploads'
+import { imageUrl } from '@/utils/image-url'
 import type { UploadImageResponse } from '@/types/content'
 
 interface ImageUploadProps {
@@ -24,7 +25,7 @@ function ImageUpload({ value, onChange, area }: ImageUploadProps) {
     }
   }, [previewUrl])
 
-  const displaySrc = previewUrl ?? value
+  const displaySrc = previewUrl ?? imageUrl(value)
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -50,15 +51,15 @@ function ImageUpload({ value, onChange, area }: ImageUploadProps) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-start' }}>
       {displaySrc && (
-        <Box sx={{ position: 'relative', width: 200, height: 200 }}>
+        <Box sx={{ position: 'relative', width: 200, height: 200, border: '2px solid #E8E0D4', borderRadius: 2, overflow: 'hidden' }}>
           <Box
             component="img"
             src={displaySrc}
-            sx={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 1 }}
+            sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
           {uploading && (
-            <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgba(0,0,0,0.4)', borderRadius: 1 }}>
-              <CircularProgress size={36} sx={{ color: '#fff' }} />
+            <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgba(249, 245, 238, 0.7)' }}>
+              <CircularProgress size={36} color="primary" />
             </Box>
           )}
         </Box>

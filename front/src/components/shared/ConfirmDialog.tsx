@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 
 interface ConfirmDialogProps {
   open: boolean
@@ -31,7 +32,8 @@ function ConfirmDialog({
     <Dialog open={open} onClose={onCancel}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
+        <WarningAmberIcon sx={{ fontSize: 40, color: 'warning.main', display: 'block', mx: 'auto', mb: 1.5 }} />
+        <DialogContentText sx={{ textAlign: 'center' }}>{message}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} disabled={loading}>
