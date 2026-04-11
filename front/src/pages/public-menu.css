@@ -34,6 +34,12 @@
   --px: 1rem;
   --card-img-h: 140px;
   --card-body-h: 120px;
+
+  /* New tokens */
+  --footer-bg: #2C2416;
+  --footer-text: #F9F5EE;
+  --footer-text-dim: rgba(249, 245, 238, 0.6);
+  --shadow-card-rich: 0 8px 32px rgba(44, 36, 22, 0.14), 0 2px 8px rgba(44, 36, 22, 0.08);
 }
 
 /* ── Reset for public page ── */
@@ -60,6 +66,25 @@
 .pm a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Parchment noise texture */
+.pm::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+.pm > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Container ── */
@@ -251,6 +276,24 @@
 
 .pm-section:first-child {
   padding-top: 1.25rem;
+}
+
+.pm-section::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-top: 2.5rem;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(196, 132, 29, 0.12),
+    rgba(196, 132, 29, 0.06),
+    transparent
+  );
+}
+
+.pm-section:last-child::after {
+  display: none;
 }
 
 .pm-section-header {
