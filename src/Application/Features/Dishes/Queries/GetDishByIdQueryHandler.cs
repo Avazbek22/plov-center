@@ -22,7 +22,10 @@ public sealed class GetDishByIdQueryHandler(IApplicationDbContext applicationDbC
                 dish.Name,
                 dish.Description,
                 dish.Price,
-                dish.PhotoPath,
+                dish.Photos
+                    .OrderBy(photo => photo.SortOrder)
+                    .Select(photo => new DishPhotoResponse(photo.Id, photo.RelativePath, photo.SortOrder))
+                    .ToArray(),
                 dish.SortOrder,
                 dish.IsVisible,
                 dish.CreatedUtc,

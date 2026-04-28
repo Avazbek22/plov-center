@@ -31,12 +31,24 @@ public sealed class CreateDishCommandHandler(
             Name = request.Name.NormalizeTrimmed(),
             Description = request.Description.NormalizeOptional(),
             Price = request.Price,
-            PhotoPath = request.PhotoPath.NormalizeOptional(),
             SortOrder = request.SortOrder,
             IsVisible = request.IsVisible,
             CreatedUtc = utcNow,
             UpdatedUtc = utcNow
         };
+
+        foreach (var input in request.Photos.OrderBy(static p => p.SortOrder))
+        {
+            dish.Photos.Add(new DishPhoto
+            {
+                Id = Guid.NewGuid(),
+                DishId = dish.Id,
+                RelativePath = input.RelativePath.NormalizeTrimmed(),
+                SortOrder = input.SortOrder,
+                CreatedUtc = utcNow,
+                UpdatedUtc = utcNow
+            });
+        }
 
         applicationDbContext.Dishes.Add(dish);
         await applicationDbContext.SaveChangesAsync(cancellationToken);

@@ -7,7 +7,7 @@ public sealed record DishResponse(
     string Name,
     string? Description,
     decimal Price,
-    string? PhotoPath,
+    IReadOnlyList<DishPhotoResponse> Photos,
     int SortOrder,
     bool IsVisible,
     DateTime CreatedUtc,

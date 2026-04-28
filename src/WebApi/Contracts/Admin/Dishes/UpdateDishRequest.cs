@@ -1,3 +1,5 @@
+using PlovCenter.Application.Contract.Dishes;
+
 namespace PlovCenter.WebApi.Contracts.Admin.Dishes;
 
 public sealed class UpdateDishRequest
@@ -10,7 +12,7 @@ public sealed class UpdateDishRequest
 
     public decimal Price { get; set; }
 
-    public string? PhotoPath { get; set; }
+    public IReadOnlyList<DishPhotoInput> Photos { get; set; } = [];
 
     public int SortOrder { get; set; }
 
