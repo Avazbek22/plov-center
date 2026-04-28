@@ -1105,10 +1105,10 @@
 .pm-carousel-dot {
   width: 7px;
   height: 7px;
-  border-radius: 50%;
+  padding: 8px;
   border: 0;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55) content-box;
   cursor: pointer;
   transition: background 120ms ease;
 }
