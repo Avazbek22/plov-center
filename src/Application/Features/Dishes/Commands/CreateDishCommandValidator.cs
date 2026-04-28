@@ -35,7 +35,7 @@ public sealed class CreateDishCommandValidator : AbstractValidator<CreateDishCom
         {
             photo.RuleFor(static p => p.RelativePath)
                 .NotEmpty()
-                .MaximumLength(512);
+                .MaximumLength(ValidationRules.DishPhotoRelativePathMaxLength);
 
             photo.RuleFor(static p => p.SortOrder)
                 .GreaterThanOrEqualTo(0);

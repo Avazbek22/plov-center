@@ -38,6 +38,7 @@ public sealed class UpdateDishCommandHandler(
         dish.IsVisible = request.IsVisible;
         dish.UpdatedUtc = utcNow;
 
+        // RemoveRange must precede Clear: EF's change tracker keeps Deleted state on the entities even after the navigation collection is cleared.
         applicationDbContext.DishPhotos.RemoveRange(dish.Photos);
         dish.Photos.Clear();
 
