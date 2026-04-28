@@ -21,7 +21,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>4d03aec6-0439-4be8-99f6-7b2fe22d0378</UserSecretsId>
-    <AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>
   </PropertyGroup>
 
 </Project>
