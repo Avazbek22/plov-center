@@ -3,6 +3,7 @@ import { AnimatePresence, motion, MotionConfig } from 'motion/react';
 import { usePublicMenu, usePublicContent } from '@/hooks/use-public-menu';
 import { imageUrl } from '@/utils/image-url';
 import type { PublicMenuCategory, PublicMenuDish, PublicContacts } from '@/types/public';
+import DishCarousel from '@/components/shared/DishCarousel';
 import './public-menu.css';
 
 function formatPrice(price: number): string {
@@ -345,7 +346,7 @@ function MenuSection({ category, onDishClick, ref }: MenuSectionProps) {
       >
         {category.dishes.map((dish) => (
           <motion.div key={dish.id} variants={dishCard} onClick={() => onDishClick(dish)} style={{ cursor: 'pointer' }}>
-            {dish.photoPath ? (
+            {dish.photos.length > 0 ? (
               <DishCard dish={dish} />
             ) : (
               <DishListItem dish={dish} />
@@ -360,15 +361,21 @@ function MenuSection({ category, onDishClick, ref }: MenuSectionProps) {
 /* ── Dish Card (with photo) ── */
 
 function DishCard({ dish }: { dish: PublicMenuDish }) {
+  const cover = dish.photos[0];
+  const extras = dish.photos.length - 1;
+
   return (
     <div className="pm-dish-card">
       <div className="pm-dish-card-photo-wrap">
         <img
           className="pm-dish-card-photo"
-          src={imageUrl(dish.photoPath)!}
+          src={imageUrl(cover)!}
           alt={dish.name}
           loading="lazy"
         />
+        {extras > 0 && (
+          <div className="pm-dish-card-photo-badge">+{extras}</div>
+        )}
       </div>
       <div className="pm-dish-card-body">
         <div className="pm-dish-card-name">{dish.name}</div>
@@ -476,16 +483,9 @@ function DishModal({ dish, onClose }: { dish: PublicMenuDish; onClose: () => voi
           &times;
         </button>
 
-        {dish.photoPath ? (
+        {dish.photos.length > 0 ? (
           <div className="pm-modal-photo-wrap">
-            <motion.img
-              className="pm-modal-photo"
-              src={imageUrl(dish.photoPath)!}
-              alt={dish.name}
-              initial={{ scale: 1 }}
-              animate={{ scale: 1.06 }}
-              transition={{ duration: 8, ease: 'linear' }}
-            />
+            <DishCarousel photos={dish.photos} alt={dish.name} />
           </div>
         ) : (
           <div className="pm-modal-placeholder" />
