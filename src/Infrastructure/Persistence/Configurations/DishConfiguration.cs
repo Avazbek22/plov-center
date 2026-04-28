@@ -23,9 +23,6 @@ internal sealed class DishConfiguration : IEntityTypeConfiguration<Dish>
             .HasPrecision(10, 2)
             .IsRequired();
 
-        builder.Property(static dish => dish.PhotoPath)
-            .HasMaxLength(512);
-
         builder.Property(static dish => dish.SortOrder).IsRequired();
         builder.Property(static dish => dish.IsVisible).IsRequired();
         builder.Property(static dish => dish.CreatedUtc).IsRequired();
