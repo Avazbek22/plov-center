@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import {
   DndContext,
   PointerSensor,
@@ -49,9 +49,8 @@ export default function DishGalleryEditor({ value, onChange }: DishGalleryEditor
   // close over the freshest array (avoids stale-closure overwrites
   // when multiple parallel uploads finish).
   const currentValueRef = useRef(value)
-  useEffect(() => {
-    currentValueRef.current = value
-  })
+  // eslint-disable-next-line react-hooks/refs
+  currentValueRef.current = value
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
