@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { enqueueSnackbar } from 'notistack';
 
-import type { DishFormData } from '@/types/dish';
+import type { DishWritePayload } from '@/types/dish';
 import { ApiError } from '@/api/client';
 import {
   getDishes,
@@ -41,7 +41,7 @@ export function useUpdateDish() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: { id: string; data: DishFormData }) =>
+    mutationFn: (params: { id: string; data: DishWritePayload }) =>
       updateDish(params.id, params.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dishes'] });

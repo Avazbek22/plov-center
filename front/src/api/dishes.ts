@@ -1,4 +1,4 @@
-import type { DishResponse, DishFormData } from '@/types/dish';
+import type { DishResponse, DishWritePayload } from '@/types/dish';
 import { apiFetch } from './client';
 
 export function getDishes(categoryId?: string): Promise<DishResponse[]> {
@@ -12,14 +12,14 @@ export function getDish(id: string): Promise<DishResponse> {
   return apiFetch<DishResponse>(`/api/admin/dishes/${id}`);
 }
 
-export function createDish(data: DishFormData): Promise<DishResponse> {
+export function createDish(data: DishWritePayload): Promise<DishResponse> {
   return apiFetch<DishResponse>('/api/admin/dishes', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 }
 
-export function updateDish(id: string, data: DishFormData): Promise<DishResponse> {
+export function updateDish(id: string, data: DishWritePayload): Promise<DishResponse> {
   return apiFetch<DishResponse>(`/api/admin/dishes/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),

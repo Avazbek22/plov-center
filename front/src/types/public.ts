@@ -3,7 +3,7 @@ export interface PublicMenuDish {
   name: string;
   description: string | null;
   price: number;
-  photoPath: string | null;
+  photos: string[];
   sortOrder: number;
 }
 
