@@ -12,6 +12,8 @@ internal sealed class DishPhotoConfiguration : IEntityTypeConfiguration<DishPhot
 
         builder.HasKey(static photo => photo.Id);
 
+        builder.Property(static photo => photo.DishId).IsRequired();
+
         builder.Property(static photo => photo.RelativePath)
             .HasMaxLength(512)
             .IsRequired();
