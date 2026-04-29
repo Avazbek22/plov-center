@@ -42,9 +42,13 @@ public sealed class UpdateDishCommandHandler(
         applicationDbContext.DishPhotos.RemoveRange(dish.Photos);
         dish.Photos.Clear();
 
+        // Add via DbSet, not via dish.Photos.Add: attaching to a tracked parent's
+        // navigation marks new entities with non-default Guid Ids as Unchanged,
+        // which produces UPDATE statements that hit 0 rows on save. DbSet.Add
+        // forces Added state → INSERT.
         foreach (var input in request.Photos.OrderBy(static p => p.SortOrder))
         {
-            dish.Photos.Add(new DishPhoto
+            applicationDbContext.DishPhotos.Add(new DishPhoto
             {
                 Id = Guid.NewGuid(),
                 DishId = dish.Id,

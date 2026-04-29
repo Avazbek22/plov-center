@@ -72,21 +72,37 @@ export default function DishGalleryEditor({ value, onChange }: DishGalleryEditor
 
     onChange([...value, ...newPhotos])
 
-    fileArray.forEach((file, i) => {
-      const tempId = newPhotos[i].tempId
-      uploadImage(file, 'dish')
-        .then((response) => {
-          onChange(
-            (currentValueRef.current ?? []).map((p) =>
-              p.tempId === tempId
-                ? { ...p, relativePath: response.relativePath, uploading: false }
-                : p,
-            ),
-          )
-        })
-        .catch(() => {
-          onChange((currentValueRef.current ?? []).filter((p) => p.tempId !== tempId))
-        })
+    // Batch all upload results into a single onChange so concurrent resolves
+    // can't race: each individual onChange call would read currentValueRef
+    // before the previous call's update flushed back, and React 19's automatic
+    // batching collapses the calls into one — the last one wins.
+    Promise.allSettled(
+      fileArray.map((file, i) =>
+        uploadImage(file, 'dish').then((response) => ({
+          tempId: newPhotos[i].tempId,
+          relativePath: response.relativePath,
+        })),
+      ),
+    ).then((results) => {
+      const succeeded = new Map<string, string>()
+      const failed = new Set<string>()
+      results.forEach((result, i) => {
+        const tempId = newPhotos[i].tempId
+        if (result.status === 'fulfilled') {
+          succeeded.set(tempId, result.value.relativePath)
+        } else {
+          failed.add(tempId)
+        }
+      })
+      onChange(
+        (currentValueRef.current ?? [])
+          .filter((p) => !failed.has(p.tempId))
+          .map((p) =>
+            succeeded.has(p.tempId)
+              ? { ...p, relativePath: succeeded.get(p.tempId)!, uploading: false }
+              : p,
+          ),
+      )
     })
 
     if (inputRef.current) inputRef.current.value = ''
