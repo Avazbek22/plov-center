@@ -68,3 +68,10 @@ front/.vite/
 
 # Superpowers brainstorming session artifacts
 .superpowers/
+
+# Playwright MCP debug artifacts (screenshots, logs)
+.playwright-mcp/
+
+# Debug screenshots in repo root (admin-*.png, public-*.png from manual testing)
+/admin-*.png
+/public-*.png

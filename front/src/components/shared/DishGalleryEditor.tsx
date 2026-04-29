@@ -199,7 +199,7 @@ function SortableTile({ photo, isCover, onRemove }: SortableTileProps) {
         <Box
           component="img"
           src={src}
-          alt=""
+          alt={`Фото блюда ${photo.sortOrder + 1}`}
           sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       )}
