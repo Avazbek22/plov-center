@@ -42,16 +42,16 @@ import {
 } from '@/hooks/use-dishes';
 import { useCategoriesQuery } from '@/hooks/use-categories';
 import { dishFormSchema } from '@/types/dish';
-import type { DishResponse, DishFormData } from '@/types/dish';
+import type { DishResponse, DishFormData, DishWritePayload } from '@/types/dish';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import ImageUpload from '@/components/shared/ImageUpload';
+import DishGalleryEditor from '@/components/shared/DishGalleryEditor';
 
 const DEFAULT_VALUES: DishFormData = {
   categoryId: '',
   name: '',
   description: null,
   price: 0,
-  photoPath: null,
+  photos: [],
   sortOrder: 0,
   isVisible: true,
 };
@@ -90,7 +90,12 @@ export default function Dishes() {
       name: dish.name,
       description: dish.description,
       price: dish.price,
-      photoPath: dish.photoPath,
+      photos: dish.photos.map((p) => ({
+        tempId: `srv-${p.id}`,
+        relativePath: p.relativePath,
+        sortOrder: p.sortOrder,
+        uploading: false,
+      })),
       sortOrder: dish.sortOrder,
       isVisible: dish.isVisible,
     });
@@ -103,10 +108,25 @@ export default function Dishes() {
   }
 
   async function onSubmit(data: DishFormData) {
+    if (data.photos.some((p) => p.uploading || !p.relativePath)) {
+      return;
+    }
+    const payload: DishWritePayload = {
+      categoryId: data.categoryId,
+      name: data.name,
+      description: data.description,
+      price: data.price,
+      photos: data.photos.map((p, index) => ({
+        relativePath: p.relativePath as string,
+        sortOrder: index,
+      })),
+      sortOrder: data.sortOrder,
+      isVisible: data.isVisible,
+    };
     if (editingDish) {
-      await updateDish.mutateAsync({ id: editingDish.id, data });
+      await updateDish.mutateAsync({ id: editingDish.id, data: payload });
     } else {
-      await createDish.mutateAsync(data);
+      await createDish.mutateAsync(payload);
     }
     closeDialog();
   }
@@ -117,6 +137,7 @@ export default function Dishes() {
     setDeletingDish(null);
   }
 
+  const photosUploading = form.watch('photos')?.some((p) => p.uploading) ?? false;
   const submitting = createDish.isPending || updateDish.isPending;
 
   return (
@@ -179,18 +200,36 @@ export default function Dishes() {
                 dishes.map((dish) => (
                   <TableRow key={dish.id}>
                     <TableCell>
-                      {dish.photoPath ? (
-                        <Box
-                          component="img"
-                          src={imageUrl(dish.photoPath)!}
-                          alt={dish.name}
-                          sx={{
-                            width: 40,
-                            height: 40,
-                            objectFit: 'cover',
-                            borderRadius: 0.5,
-                          }}
-                        />
+                      {dish.photos.length > 0 ? (
+                        <Box sx={{ position: 'relative', width: 40, height: 40 }}>
+                          <Box
+                            component="img"
+                            src={imageUrl(dish.photos[0].relativePath)!}
+                            alt={dish.name}
+                            sx={{
+                              width: 40,
+                              height: 40,
+                              objectFit: 'cover',
+                              borderRadius: 0.5,
+                            }}
+                          />
+                          {dish.photos.length > 1 && (
+                            <Box sx={{
+                              position: 'absolute',
+                              top: -4, right: -4,
+                              bgcolor: 'rgba(0,0,0,0.7)',
+                              color: 'white',
+                              fontSize: 10,
+                              fontWeight: 600,
+                              borderRadius: 8,
+                              minWidth: 18, height: 18,
+                              px: 0.5,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
+                              +{dish.photos.length - 1}
+                            </Box>
+                          )}
+                        </Box>
                       ) : (
                         <Box
                           sx={{
@@ -318,13 +357,12 @@ export default function Dishes() {
             />
 
             <Controller
-              name="photoPath"
+              name="photos"
               control={form.control}
               render={({ field }) => (
-                <ImageUpload
-                  value={field.value ?? null}
-                  onChange={(path) => field.onChange(path)}
-                  area="dish"
+                <DishGalleryEditor
+                  value={field.value}
+                  onChange={(next) => field.onChange(next)}
                 />
               )}
             />
@@ -336,7 +374,7 @@ export default function Dishes() {
             <Button
               type="submit"
               variant="contained"
-              disabled={submitting}
+              disabled={submitting || photosUploading}
               startIcon={submitting ? <CircularProgress size={18} color="inherit" /> : undefined}
             >
               {editingDish ? 'Сохранить' : 'Создать'}

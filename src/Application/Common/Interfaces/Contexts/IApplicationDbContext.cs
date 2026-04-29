@@ -9,6 +9,8 @@ public interface IApplicationDbContext
 
     DbSet<Dish> Dishes { get; }
 
+    DbSet<DishPhoto> DishPhotos { get; }
+
     DbSet<AdminUser> AdminUsers { get; }
 
     DbSet<SiteContentEntry> SiteContentEntries { get; }

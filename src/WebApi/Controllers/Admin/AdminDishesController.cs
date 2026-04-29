@@ -49,7 +49,7 @@ public sealed class AdminDishesController(IMediator mediator) : ControllerBase
             Name = request.Name,
             Description = request.Description,
             Price = request.Price,
-            PhotoPath = request.PhotoPath,
+            Photos = request.Photos,
             SortOrder = request.SortOrder,
             IsVisible = request.IsVisible
         };

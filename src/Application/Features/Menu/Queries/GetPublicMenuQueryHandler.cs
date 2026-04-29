@@ -29,7 +29,10 @@ public sealed class GetPublicMenuQueryHandler(IApplicationDbContext applicationD
                         dish.Name,
                         dish.Description,
                         dish.Price,
-                        dish.PhotoPath,
+                        dish.Photos
+                            .OrderBy(photo => photo.SortOrder)
+                            .Select(photo => photo.RelativePath)
+                            .ToArray(),
                         dish.SortOrder))
                     .ToArray()))
             .ToArrayAsync(cancellationToken);

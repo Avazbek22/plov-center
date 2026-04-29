@@ -11,6 +11,8 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
     public DbSet<Dish> Dishes => Set<Dish>();
 
+    public DbSet<DishPhoto> DishPhotos => Set<DishPhoto>();
+
     public DbSet<AdminUser> AdminUsers => Set<AdminUser>();
 
     public DbSet<SiteContentEntry> SiteContentEntries => Set<SiteContentEntry>();

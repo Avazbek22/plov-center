@@ -62,3 +62,9 @@ front/.vite/
 *.temp
 *~
 ~$*
+
+# Claude Code local plugins
+.claude-plugins/
+
+# Superpowers brainstorming session artifacts
+.superpowers/

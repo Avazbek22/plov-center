@@ -14,9 +14,9 @@ public sealed class Dish : AuditableEntity
 
     public decimal Price { get; set; }
 
-    public string? PhotoPath { get; set; }
-
     public int SortOrder { get; set; }
 
     public bool IsVisible { get; set; }
+
+    public List<DishPhoto> Photos { get; set; } = [];
 }

@@ -5,5 +5,5 @@ public sealed record PublicMenuDishResponse(
     string Name,
     string? Description,
     decimal Price,
-    string? PhotoPath,
+    IReadOnlyList<string> Photos,
     int SortOrder);

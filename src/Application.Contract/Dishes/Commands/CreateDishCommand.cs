@@ -13,7 +13,7 @@ public sealed class CreateDishCommand : IRequest<DishResponse>
 
     public decimal Price { get; set; }
 
-    public string? PhotoPath { get; set; }
+    public IReadOnlyList<DishPhotoInput> Photos { get; set; } = [];
 
     public int SortOrder { get; set; }
 
