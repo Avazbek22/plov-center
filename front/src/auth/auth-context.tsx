@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect, useCallback, type ReactNode } from 'react';
+import { createContext, useReducer, useEffect, useCallback, type ReactNode } from 'react';
 import type { AuthSession, AdminUser, LoginCredentials } from '@/types/auth';
 import type { LoginResponse } from '@/types/api';
 import { getStoredAuth, setStoredAuth, clearStoredAuth } from '@/api/client';
@@ -91,10 +91,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth(): AuthContextValue {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-}
+export { AuthContext };
+export type { AuthContextValue };

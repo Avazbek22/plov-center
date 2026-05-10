@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useAuth } from '@/auth/auth-context';
+import { useAuth } from '@/auth/use-auth';
 
 export default function ProtectedRoute() {
   const { session } = useAuth();

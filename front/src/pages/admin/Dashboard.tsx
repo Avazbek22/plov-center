@@ -13,7 +13,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import AddIcon from '@mui/icons-material/Add';
 import CategoryIcon from '@mui/icons-material/Category';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import { useAuth } from '@/auth/auth-context';
+import { useAuth } from '@/auth/use-auth';
 import { useCategoriesQuery } from '@/hooks/use-categories';
 import { useDishesQuery } from '@/hooks/use-dishes';
 

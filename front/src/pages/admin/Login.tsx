@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { motion } from 'motion/react';
-import { useAuth } from '@/auth/auth-context';
+import { useAuth } from '@/auth/use-auth';
 import { ApiError } from '@/api/client';
 
 const loginSchema = z.object({

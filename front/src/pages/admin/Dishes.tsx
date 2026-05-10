@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { imageUrl } from '@/utils/image-url';
 
@@ -76,6 +76,7 @@ export default function Dishes() {
     resolver: zodResolver(dishFormSchema),
     defaultValues: DEFAULT_VALUES,
   });
+  const watchedPhotos = useWatch({ control: form.control, name: 'photos' });
 
   function openCreateDialog() {
     setEditingDish(null);
@@ -137,7 +138,7 @@ export default function Dishes() {
     setDeletingDish(null);
   }
 
-  const photosUploading = form.watch('photos')?.some((p) => p.uploading) ?? false;
+  const photosUploading = watchedPhotos?.some((p) => p.uploading) ?? false;
   const submitting = createDish.isPending || updateDish.isPending;
 
   return (
