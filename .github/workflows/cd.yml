@@ -1,15 +1,12 @@
-name: Release
+name: CD
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version tag (e.g. v0.1.0)'
-        required: true
-        type: string
+    branches:
+      - main
+
+permissions:
+  contents: write
 
 env:
   REGISTRY: tonyregistry.duckdns.org
@@ -17,22 +14,33 @@ env:
   FRONTEND_IMAGE: tonyregistry.duckdns.org/plov-center-front
 
 jobs:
+  tag:
+    name: Bump version & create tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.bump.outputs.new_tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump version and push tag
+        id: bump
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: true
+          INITIAL_VERSION: 0.1.0
+
   build-backend:
     name: Build & push backend
+    needs: tag
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Resolve version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ inputs.version }}"
-          else
-            VERSION="${GITHUB_REF_NAME}"
-          fi
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
@@ -52,27 +60,18 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ${{ env.BACKEND_IMAGE }}:${{ steps.version.outputs.version }}
+            ${{ env.BACKEND_IMAGE }}:${{ needs.tag.outputs.version }}
             ${{ env.BACKEND_IMAGE }}:latest
           cache-from: type=registry,ref=${{ env.BACKEND_IMAGE }}:buildcache
           cache-to: type=registry,ref=${{ env.BACKEND_IMAGE }}:buildcache,mode=max
 
   build-frontend:
     name: Build & push frontend
+    needs: tag
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Resolve version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ inputs.version }}"
-          else
-            VERSION="${GITHUB_REF_NAME}"
-          fi
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
@@ -92,7 +91,7 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ${{ env.FRONTEND_IMAGE }}:${{ steps.version.outputs.version }}
+            ${{ env.FRONTEND_IMAGE }}:${{ needs.tag.outputs.version }}
             ${{ env.FRONTEND_IMAGE }}:latest
           cache-from: type=registry,ref=${{ env.FRONTEND_IMAGE }}:buildcache
           cache-to: type=registry,ref=${{ env.FRONTEND_IMAGE }}:buildcache,mode=max
