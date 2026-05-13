@@ -1,0 +1,37 @@
+# .NET build artifacts
+**/bin/
+**/obj/
+**/*.user
+**/.vs/
+**/.vscode/
+**/TestResults/
+**/*.coverlet.json
+
+# VCS / editor
+.git/
+.gitignore
+.gitattributes
+.idea/
+
+# Docs and per-repo extras (not needed inside the image)
+docs/
+agent_docs/
+LICENSE
+README.md
+CLAUDE.md
+
+# Frontend lives in its own image
+front/
+
+# Secrets / runtime files must not leak into the build context
+.env
+.env.*
+!.env.example
+**/secrets.json
+
+# Container files themselves
+Dockerfile
+.dockerignore
+
+# Local logs / scratch
+**/*.log

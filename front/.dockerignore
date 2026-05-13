@@ -1,0 +1,16 @@
+node_modules/
+dist/
+test-results/
+
+.git/
+.gitignore
+.vscode/
+.idea/
+
+.env
+.env.*
+
+Dockerfile
+.dockerignore
+
+*.log
