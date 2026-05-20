@@ -2,11 +2,17 @@
   "mcpServers": {
     "context7": {
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@latest"]
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
     },
     "supabase": {
       "command": "npx",
@@ -21,11 +27,16 @@
     },
     "playwright": {
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": [
+        "@playwright/mcp@latest"
+      ]
     },
     "shadcn": {
       "command": "npx",
-      "args": ["shadcn@latest", "mcp"]
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
     },
     "serena": {
       "command": "uvx",
@@ -37,6 +48,16 @@
         "--context",
         "ide-assistant"
       ]
+    },
+    "cwm-roslyn-navigator": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": [
+        "cwm-roslyn-navigator",
+        "--solution",
+        "${workspaceFolder}"
+      ],
+      "env": {}
     }
   }
 }
