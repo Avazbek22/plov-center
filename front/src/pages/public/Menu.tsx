@@ -4,7 +4,7 @@ import { usePublicMenu, usePublicContent } from '@/hooks/use-public-menu';
 import { imageUrl } from '@/utils/image-url';
 import type { PublicMenuCategory, PublicMenuDish, PublicContacts } from '@/types/public';
 import DishCarousel from '@/components/shared/DishCarousel';
-import './public-menu.css';
+import './menu.css';
 
 function formatPrice(price: number): string {
   return price.toLocaleString('ru-RU');
@@ -234,9 +234,12 @@ export default function PublicMenu() {
             <span className="pm-hero-ornament-diamond" />
           </motion.div>
           <motion.h1 className="pm-hero-title" variants={heroTitle}>
-            Плов Центр
+            Меню
           </motion.h1>
           <motion.hr className="pm-hero-divider" variants={fadeUp} />
+          <motion.p className="pm-hero-subtitle" variants={fadeUp}>
+            Узбекская кухня, приготовленная с теплом. Свежие блюда каждый день.
+          </motion.p>
         </motion.div>
       </header>
 

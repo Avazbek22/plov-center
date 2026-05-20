@@ -1,5 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import PublicMenu from '@/pages/PublicMenu';
+import PublicLayout from '@/components/layout/PublicLayout';
+import Home from '@/pages/public/Home';
+import Menu from '@/pages/public/Menu';
+import Contacts from '@/pages/public/Contacts';
+import Privacy from '@/pages/public/Privacy';
+import Terms from '@/pages/public/Terms';
 import NotFound from '@/pages/NotFound';
 import Login from '@/pages/admin/Login';
 import Dashboard from '@/pages/admin/Dashboard';
@@ -12,7 +17,14 @@ import ProtectedRoute from '@/auth/ProtectedRoute';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <PublicMenu />,
+    element: <PublicLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'menu', element: <Menu /> },
+      { path: 'contacts', element: <Contacts /> },
+      { path: 'privacy', element: <Privacy /> },
+      { path: 'terms', element: <Terms /> },
+    ],
   },
   {
     path: '/admin/login',
