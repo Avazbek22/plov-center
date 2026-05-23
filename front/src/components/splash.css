@@ -1,0 +1,140 @@
+/* ═══════════════════════════════════════════════════
+   Splash Screen — first-load brand intro
+   ═══════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Noto+Serif:wght@400;500;600;700&display=swap');
+
+.pc-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(ellipse 90% 100% at 50% 50%, #1a0f00 0%, #0D0700 70%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  color: #F0E6D6;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Subtle noise texture */
+.pc-splash::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+.pc-splash-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pc-splash-mark {
+  position: relative;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E8B43E 0%, #D4A032 45%, #8B5A12 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 4.3rem;
+  font-weight: 700;
+  color: #1a0f00;
+  line-height: 1;
+  box-shadow:
+    0 0 0 2px rgba(212,160,50,0.55),
+    0 0 50px rgba(212,160,50,0.4),
+    inset 0 2px 6px rgba(255,255,255,0.25);
+}
+
+.pc-splash-mark::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,160,50,0.2);
+  pointer-events: none;
+}
+
+.pc-splash-brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-size: 1.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #F0E6D6;
+  text-align: center;
+}
+
+.pc-splash-pill {
+  padding: 0.55rem 1.5rem 0.5rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(212,160,50,0.55);
+  background: rgba(212,160,50,0.06);
+  font-family: 'Noto Serif', Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: #D4A032;
+  white-space: nowrap;
+}
+
+.pc-splash-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.pc-splash-progress {
+  width: min(220px, 70vw);
+  height: 2px;
+  background: rgba(212,160,50,0.18);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pc-splash-progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(to right, #D4A032, #E8B43E);
+  border-radius: 4px;
+  animation: pc-splash-fill 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  box-shadow: 0 0 12px rgba(212,160,50,0.4);
+}
+
+@keyframes pc-splash-fill {
+  to { width: 100%; }
+}
+
+.pc-splash-percent {
+  font-family: 'Noto Serif', Georgia, serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: rgba(240,230,214,0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 480px) {
+  .pc-splash { gap: 1.5rem; }
+  .pc-splash-mark { width: 96px; height: 96px; font-size: 3.6rem; }
+  .pc-splash-brand { font-size: 1.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-splash-progress-fill {
+    animation: none;
+    width: 100%;
+  }
+}

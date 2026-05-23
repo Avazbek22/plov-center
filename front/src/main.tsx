@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'notistack';
 import { AuthProvider } from '@/auth/auth-context';
+import SplashGate from '@/components/SplashGate';
 import theme from '@/theme/theme';
 import App from './App';
 
@@ -24,7 +25,9 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <SnackbarProvider maxSnack={3} autoHideDuration={3000} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
           <AuthProvider>
-            <App />
+            <SplashGate>
+              <App />
+            </SplashGate>
           </AuthProvider>
         </SnackbarProvider>
       </QueryClientProvider>

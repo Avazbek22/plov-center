@@ -1,0 +1,275 @@
+/* ═══════════════════════════════════════════════════
+   Developers page
+   ═══════════════════════════════════════════════════ */
+
+.pcd-root {
+  background: var(--pc-bg);
+}
+
+/* ── Hero ── */
+.pcd-head {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding-top: 3.5rem;
+  padding-bottom: 3rem;
+  text-align: center;
+}
+
+.pcd-head-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 60% 80% at 10% 30%, rgba(212,160,50,0.1), transparent 60%),
+    radial-gradient(ellipse 50% 70% at 90% 70%, rgba(212,160,50,0.08), transparent 60%),
+    var(--pc-bg);
+}
+
+@media (min-width: 720px) {
+  .pcd-head { padding-top: 5rem; padding-bottom: 4rem; }
+}
+
+.pcd-head-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 56ch;
+  margin: 0 auto;
+}
+
+/* ── Cards grid ── */
+.pcd-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 880px) {
+  .pcd-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+
+/* ── Developer card ── */
+.pcd-card {
+  background: var(--pc-bg-card);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 2rem 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (hover: hover) {
+  .pcd-card:hover {
+    border-color: var(--pc-border-strong);
+    box-shadow: var(--pc-shadow-card-hover);
+  }
+}
+
+/* Avatar */
+.pcd-avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212,160,50,0.2), rgba(139,90,18,0.15));
+  border: 2px solid rgba(212,160,50,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--pc-font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--pc-accent);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.pcd-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.pcd-avatar-dot {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #6FBF73;
+  border: 3px solid var(--pc-bg-card);
+}
+
+/* Name + role */
+.pcd-name {
+  font-family: var(--pc-font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--pc-text);
+  letter-spacing: 0.02em;
+}
+
+.pcd-role {
+  font-family: var(--pc-font-body);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--pc-accent);
+  line-height: 1.4;
+}
+
+.pcd-desc {
+  font-size: 0.92rem;
+  color: var(--pc-text-secondary);
+  line-height: 1.65;
+  max-width: 44ch;
+  text-wrap: pretty;
+}
+
+/* Skill chips */
+.pcd-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.pcd-chip {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--pc-radius-pill);
+  border: 1px solid rgba(212,160,50,0.35);
+  background: rgba(212,160,50,0.06);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--pc-accent);
+  white-space: nowrap;
+}
+
+/* Action buttons */
+.pcd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.pcd-actions .pc-btn {
+  flex: 1;
+  min-width: 130px;
+  max-width: 180px;
+  font-size: 0.82rem;
+  padding: 0.7rem 1rem;
+}
+
+.pcd-actions .pc-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Contact card ── */
+.pcd-contact {
+  max-width: 560px;
+  margin: 0 auto 3rem;
+  background: var(--pc-bg-card);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.pcd-contact-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(212,160,50,0.25), rgba(212,160,50,0.08));
+  border: 1px solid rgba(212,160,50,0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pc-accent);
+}
+
+.pcd-contact-icon svg { width: 22px; height: 22px; }
+
+.pcd-contact-title {
+  font-family: var(--pc-font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--pc-text);
+}
+
+.pcd-contact-subtitle {
+  font-size: 0.92rem;
+  color: var(--pc-text-secondary);
+  line-height: 1.6;
+  max-width: 42ch;
+}
+
+.pcd-contact-note {
+  font-size: 0.82rem;
+  color: var(--pc-text-muted);
+  font-style: italic;
+}
+
+/* ── Stats ── */
+.pcd-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 3.5rem;
+}
+
+@media (min-width: 720px) {
+  .pcd-stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+.pcd-stat {
+  background: var(--pc-bg-card);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pcd-stat-icon {
+  color: var(--pc-accent);
+  margin-bottom: 0.25rem;
+}
+
+.pcd-stat-icon svg { width: 28px; height: 28px; }
+
+.pcd-stat-value {
+  font-family: var(--pc-font-display);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--pc-accent);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.pcd-stat-label {
+  font-size: 0.85rem;
+  color: var(--pc-text-secondary);
+}

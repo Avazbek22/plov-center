@@ -5,6 +5,7 @@ import Menu from '@/pages/public/Menu';
 import Contacts from '@/pages/public/Contacts';
 import Privacy from '@/pages/public/Privacy';
 import Terms from '@/pages/public/Terms';
+import Developers from '@/pages/public/Developers';
 import NotFound from '@/pages/NotFound';
 import Login from '@/pages/admin/Login';
 import Dashboard from '@/pages/admin/Dashboard';
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: 'contacts', element: <Contacts /> },
       { path: 'privacy', element: <Privacy /> },
       { path: 'terms', element: <Terms /> },
+      { path: 'developers', element: <Developers /> },
     ],
   },
   {

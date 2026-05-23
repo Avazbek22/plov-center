@@ -114,6 +114,7 @@ function PublicFooter() {
           <RouterLink to="/contacts">Контакты</RouterLink>
           <RouterLink to="/privacy">Политика конфиденциальности</RouterLink>
           <RouterLink to="/terms">Условия использования</RouterLink>
+          <RouterLink to="/developers">Разработчики</RouterLink>
         </nav>
         <div className="pc-footer-meta">© {year} Плов Центр. Все права защищены.</div>
       </div>
