@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from 'motion/react';
 import './splash.css';
 
 const STORAGE_KEY = 'pc-splash-shown-v1';
-const SPLASH_DURATION = 1700;
+const SPLASH_MIN = 1000;
+const SPLASH_MAX = 2000;
 
 export default function SplashGate({ children }: { children: ReactNode }) {
   const [show, setShow] = useState(() => {
@@ -16,6 +17,7 @@ export default function SplashGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!show) return;
+    const duration = SPLASH_MIN + Math.random() * (SPLASH_MAX - SPLASH_MIN);
     const timer = window.setTimeout(() => {
       setShow(false);
       try {
@@ -23,7 +25,7 @@ export default function SplashGate({ children }: { children: ReactNode }) {
       } catch {
         /* ignore storage errors */
       }
-    }, SPLASH_DURATION);
+    }, duration);
     return () => window.clearTimeout(timer);
   }, [show]);
 

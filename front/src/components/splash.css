@@ -110,7 +110,7 @@
   width: 0;
   background: linear-gradient(to right, #D4A032, #E8B43E);
   border-radius: 4px;
-  animation: pc-splash-fill 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: pc-splash-fill 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   box-shadow: 0 0 12px rgba(212,160,50,0.4);
 }
 
